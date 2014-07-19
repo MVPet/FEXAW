@@ -3,8 +3,10 @@
 // Class will not stay this way forever, especially once menus are added in
 
 // default constructor
-Game::Game() : mWindow(sf::VideoMode(1280,720), "FEXAW"), timePerFrame(sf::seconds(1.f / 60.f))
-{}
+Game::Game() : mWindow(sf::VideoMode(480,320), "FEXAW"), timePerFrame(sf::seconds(1.f / 60.f))
+{
+	test = new Stage(15, 10);
+}
 
 // our "infinte" loop that starts the game clock and loops while the window is open
 // updates the game ~60fps
@@ -19,7 +21,7 @@ void Game::run()
 		while (timeSinceLastUpdate > timePerFrame)
 		{
 			timeSinceLastUpdate -= timePerFrame;
-			//stage->handlePlayerInput();
+			processEvents();
 			update(timePerFrame);
 		}
 		render();
@@ -34,22 +36,30 @@ void Game::processEvents()
 	{
 		switch (event.type)
 		{
-			case sf::Event::Closed:
-				mWindow.close();
-				break;
+		case sf::Event::KeyPressed:
+			test->handlePlayerInput(event.key.code, true);
+			break;
+
+		case sf::Event::KeyReleased:
+			test->handlePlayerInput(event.key.code, false);
+			break;
+
+		case sf::Event::Closed:
+			mWindow.close();
+			break;
 		}
 	}
 }
 
 void Game::update(sf::Time deltaTime)
 {
-	//stage->update(deltaTime);
+	test->update(deltaTime);
 }
 
 // render the game tot he screen, by clearing the window and drawing everything
 void Game::render()
 {
 	mWindow.clear();
-	//stage->draw(&mWindow);
+	test->draw(&mWindow);
 	mWindow.display();
 }

@@ -6,7 +6,7 @@
 
 namespace Textures
 {
-	enum ID { Stuff };
+	enum ID { Land, Ocean, P1HUD, Cursor };
 }
 
 class TextureHolder

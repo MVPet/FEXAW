@@ -84,15 +84,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CO.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="Tags.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CO.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Stage.hpp" />
+    <ClInclude Include="Tags.hpp" />
     <ClInclude Include="TextureHolder.hpp" />
+    <ClInclude Include="Tile.hpp" />
+    <ClInclude Include="Unit.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #ifndef _GAME
 #define _GAME
 
-#include "TextureHolder.hpp"
+#include "Stage.hpp"
 
 
 class Game
@@ -16,6 +16,7 @@ protected:
 	void	render();
 
 private:
+	Stage*				test;
 	sf::RenderWindow	mWindow;
 	sf::Time			timePerFrame;
 };
