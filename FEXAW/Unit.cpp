@@ -1,9 +1,10 @@
 #include "Unit.hpp"
 
-Unit::Unit(std::string nam) : canMove(true)
+Unit::Unit(std::string nam, int range) : canMove(true)
 {
 	name = nam;
 	health = 10;
+	moveRange = range;
 
 	load();
 }
@@ -20,6 +21,12 @@ void Unit::setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos)
 sf::Vector2i Unit::getLocation()
 { return location; }
 
+void Unit::setColor(sf::Color color)
+{ sprite.setColor(color); }
+
+void Unit::setCanMove(bool val)
+{ canMove = val; }
+
 void Unit::load()
 {
 	std::string filename = "Assets/Units/" + name + ".png";
@@ -34,6 +41,9 @@ void Unit::load()
 
 bool Unit::getCanMove()
 { return canMove; }
+
+int Unit::getMoveRange()
+{ return moveRange; }
 
 void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 {
@@ -56,6 +66,4 @@ void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 
 	sprite.setPosition(sprite.getPosition().x + moveX, sprite.getPosition().y + moveY);
 	location = loc;
-	sprite.setColor(sf::Color(84,84,84));
-	canMove = false;
 }

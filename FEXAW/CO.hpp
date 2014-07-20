@@ -15,7 +15,7 @@ public:
 
 	void			drawHUD(sf::RenderWindow* window);
 	void			drawUnits(sf::RenderWindow* window);
-	Unit*			addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos);
+	Unit*			addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range);
 	Faction::ID		getFaction();
 
 protected:

@@ -10,13 +10,17 @@
 class Unit
 {
 public:
-	Unit(std::string nam);
+	Unit(std::string nam, int range);
 
 	void			draw(sf::RenderWindow* window);
 	void			setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos);
 	sf::Vector2i	getLocation();
 	bool			getCanMove();
+	int				getMoveRange();
 	void			MoveTo(sf::Vector2i loc, std::queue<char>* q);
+
+	void			setColor(sf::Color color);
+	void			setCanMove(bool val);
 
 protected:
 
@@ -26,6 +30,7 @@ private:
 	std::string	name;
 	int			health;
 	bool		canMove;
+	int			moveRange;
 
 	sf::Vector2i	location;
 	sf::Texture		texture;

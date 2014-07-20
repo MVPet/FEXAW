@@ -40,9 +40,9 @@ void CO::load()
 	mugshot.setTexture(mugTex);
 }
 
-Unit* CO::addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos)
+Unit* CO::addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range)
 {
-	unitList[numOfUnits] = new Unit(name);
+	unitList[numOfUnits] = new Unit(name, range);
 	unitList[numOfUnits]->setPositionAndLoc(loc, pos);
 
 	numOfUnits++;

@@ -1,6 +1,6 @@
 #include "Tile.hpp"
 
-Tile::Tile(std::string type, float locX, float locY) : hasUnit(false), unitOn(NULL)
+Tile::Tile(std::string type, float locX, float locY) : hasUnit(false), unitOn(NULL), canMoveTo(false)
 {
 	x = (8 + locX) * 2;
 	y = (8 + locY) * 2;
@@ -9,7 +9,7 @@ Tile::Tile(std::string type, float locX, float locY) : hasUnit(false), unitOn(NU
 	load();
 	
 	if(name == Tags::Land)
-		canMoveTo = true;
+		isHazard = false;
 }
 
 void Tile::draw(sf::RenderWindow* window)
@@ -34,6 +34,15 @@ bool Tile::getCanMoveTo()
 
 Unit* Tile::getUnitOn()
 { return unitOn; }
+
+bool Tile::getIsHazard()
+{ return isHazard; }
+
+void Tile::setColor(sf::Color color)
+{ sprite.setColor(color); }
+
+void Tile::setCanMoveTo(bool val)
+{ canMoveTo = val; }
 
 void Tile::load()
 {

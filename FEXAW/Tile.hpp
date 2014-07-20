@@ -15,7 +15,11 @@ public:
 	sf::Vector2f	getPosition();
 	bool			getHasUnit();
 	bool			getCanMoveTo();
+	bool			getIsHazard();
 	Unit*			getUnitOn();
+
+	void			setColor(sf::Color color);
+	void			setCanMoveTo(bool val);
 
 protected:
 
@@ -26,6 +30,7 @@ private:
 	int			y;
 	bool		canMoveTo;
 	bool		hasUnit;
+	bool		isHazard;
 	std::string name;
 	Unit*		unitOn;
 	sf::Texture texture;

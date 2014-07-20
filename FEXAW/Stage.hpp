@@ -17,10 +17,14 @@ public:
 protected:
 
 private:
-	void	readStage();
-	void	load();
-	void	checkConfirm();
-	void	moveUnit();
+	void			readStage();
+	void			load();
+	void			checkConfirm();
+	void			checkBack();
+	sf::Vector2i	moveUnit();
+	void			seeRange(sf::Vector2i point, int movesLeft);
+	void			resetStageColor();
+	void			drawMenu(sf::RenderWindow* window);
 
 	bool			movingMode;
 	Unit*			focusedUnit;
@@ -34,14 +38,25 @@ private:
 	bool			moveDown;
 	bool			heldConfirm;
 	bool			confirmDown;
+	bool			heldBack;
+	bool			backDown;
+
+	bool			inUnitMenu;
 	int				width;
 	int				height;
 	Tile***			layout;
 	TextureHolder	textures;
 	sf::Sprite		p1Hud;
 	sf::Vector2i	cursorLoc;
+	sf::Vector2i	prevUnitLoc;
 	sf::Sprite		cursor;
 	CO*				player1;
+
+	sf::Sprite		menuTop;
+	sf::Sprite		menuBot;
+	sf::Sprite		waitMenu;
+	sf::Sprite		fireMenu;
+	sf::Sprite		menuCursor;
 };
 
 #endif // Stage.hpp
