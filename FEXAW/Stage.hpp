@@ -22,7 +22,8 @@ private:
 	void			checkConfirm();
 	void			checkBack();
 	sf::Vector2i	moveUnit();
-	void			seeRange(sf::Vector2i point, int movesLeft);
+	bool			canUnitAttack();
+	void			seeRange(sf::Vector2i point, int movesLeft, sf::Color color);
 	void			resetStageColor();
 	void			drawMenu(sf::RenderWindow* window);
 
@@ -42,6 +43,8 @@ private:
 	bool			backDown;
 
 	bool			inUnitMenu;
+	bool			inFireMode;
+	int				menuOption;
 	int				width;
 	int				height;
 	Tile***			layout;

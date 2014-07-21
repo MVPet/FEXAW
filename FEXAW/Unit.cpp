@@ -1,10 +1,11 @@
 #include "Unit.hpp"
 
-Unit::Unit(std::string nam, int range) : canMove(true)
+Unit::Unit(std::string nam, int range, int fRange) : canMove(true), canFire(false)
 {
 	name = nam;
 	health = 10;
 	moveRange = range;
+	fireRange = fRange;
 
 	load();
 }
@@ -45,6 +46,9 @@ bool Unit::getCanMove()
 int Unit::getMoveRange()
 { return moveRange; }
 
+int Unit::getFireRange()
+{ return fireRange; }
+
 void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 {
 	float moveX = 0;
@@ -66,4 +70,9 @@ void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 
 	sprite.setPosition(sprite.getPosition().x + moveX, sprite.getPosition().y + moveY);
 	location = loc;
+}
+
+void Unit::Battle(Unit* enemy)
+{
+	//deal damage
 }

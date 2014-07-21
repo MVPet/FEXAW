@@ -1,6 +1,6 @@
 #include "Stage.hpp"
 
-Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), movingMode(false), confirmDown(false), heldConfirm(false), inUnitMenu(false), backDown(false), heldBack(false)
+Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), movingMode(false), confirmDown(false), heldConfirm(false), inUnitMenu(false), backDown(false), heldBack(false), menuOption(1), inFireMode(false)
 {
 	width = dem1;
 	height = dem2;
@@ -14,9 +14,13 @@ void Stage::update(sf::Time deltaTime)
 	if(!heldRight && moveRight)
 	{
 		heldRight = true;
-		if (cursorLoc.x != (width-1))
-			cursorLoc.x += 1;
-		cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+
+		if(!inUnitMenu)
+		{
+			if (cursorLoc.x != (width-1))
+				cursorLoc.x += 1;
+			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+		}
 	}
 	else 
 		heldRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
@@ -24,9 +28,13 @@ void Stage::update(sf::Time deltaTime)
 	if(!heldLeft && moveLeft)
 	{
 		heldLeft = true;
-		if (cursorLoc.x != 0)
-			cursorLoc.x -= 1;
-		cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+
+		if(!inUnitMenu)
+		{
+			if (cursorLoc.x != 0)
+				cursorLoc.x -= 1;
+			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+		}
 	}
 	else 
 		heldLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
@@ -34,9 +42,18 @@ void Stage::update(sf::Time deltaTime)
 	if(!heldUp && moveUp)
 	{
 		heldUp = true;
-		if (cursorLoc.y != 0)
-			cursorLoc.y -= 1;
-		cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+
+		if(!inUnitMenu)
+		{
+			if (cursorLoc.y != 0)
+				cursorLoc.y -= 1;
+			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+		}
+		else
+		{
+			menuOption = 1;
+			menuCursor.setPosition(fireMenu.getPosition().x - (fireMenu.getTexture()->getSize().x / 2), fireMenu.getPosition().y);
+		}
 	}
 	else
 		heldUp = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
@@ -44,9 +61,18 @@ void Stage::update(sf::Time deltaTime)
 	if(!heldDown && moveDown)
 	{
 		heldDown = true;
-		if (cursorLoc.y != (height-1))
-			cursorLoc.y += 1;
-		cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+
+		if(!inUnitMenu)
+		{
+			if (cursorLoc.y != (height-1))
+				cursorLoc.y += 1;
+			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+		}
+		else
+		{
+			menuOption = 2;
+			menuCursor.setPosition(waitMenu.getPosition().x - (waitMenu.getTexture()->getSize().x / 2), waitMenu.getPosition().y);
+		}
 	}
 	else 
 		heldDown = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
@@ -119,18 +145,22 @@ void Stage::load()
 	textures.load(Textures::FireMenu, "Assets/Misc/FireMenu.png");
 	fireMenu.setTexture(textures.get(Textures::FireMenu));
 	fireMenu.setOrigin(53.5, 17.f);
+	fireMenu.setPosition(menuTop.getPosition().x - 1, menuTop.getPosition().y + ((menuTop.getTexture()->getSize().y / 2) + (fireMenu.getTexture()->getSize().y / 2)));
 
 	textures.load(Textures::WaitMenu, "Assets/Misc/WaitMenu.png");
 	waitMenu.setTexture(textures.get(Textures::WaitMenu));
 	waitMenu.setOrigin(53.5, 16.5);
+	waitMenu.setPosition(fireMenu.getPosition().x - 1, fireMenu.getPosition().y + ((fireMenu.getTexture()->getSize().y / 2) + (waitMenu.getTexture()->getSize().y / 2)));
 
 	textures.load(Textures::MenuBot, "Assets/Misc/MenuBot.png");
 	menuBot.setTexture(textures.get(Textures::MenuBot));
 	menuBot.setOrigin(53.5, 7.f);
+	menuBot.setPosition(waitMenu.getPosition().x, waitMenu.getPosition().y + ((waitMenu.getTexture()->getSize().y / 2) + (menuBot.getTexture()->getSize().y / 2)));
 
 	textures.load(Textures::MenuCursor, "Assets/Misc/MenuCursor.png");
 	menuCursor.setTexture(textures.get(Textures::MenuCursor));
 	menuCursor.setOrigin(15.f, 15.f);
+	menuCursor.setPosition(fireMenu.getPosition().x - (fireMenu.getTexture()->getSize().x / 2), fireMenu.getPosition().y);
 
 	player1 = new CO(Tags::Andy, Faction::AW, 10);
 }
@@ -149,7 +179,7 @@ void Stage::readStage()
 	}
 
 	cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
-	layout[cursorLoc.x][cursorLoc.y]->setUnitOn(player1->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3));
+	layout[cursorLoc.x][cursorLoc.y]->setUnitOn(player1->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1));
 }
 
 void Stage::checkConfirm()
@@ -161,14 +191,29 @@ void Stage::checkConfirm()
 			if(layout[cursorLoc.x][cursorLoc.y]->getCanMoveTo())
 				prevUnitLoc = moveUnit();
 		}
+		else if(inFireMode)
+		{
+			if(layout[cursorLoc.x][cursorLoc.y]->getCanMoveTo())
+				focusedUnit->Battle(layout[cursorLoc.x][cursorLoc.y]->getUnitOn());
+		}
 		else
 		{
-			focusedUnit->setColor(sf::Color(84,84,84));
-			focusedUnit->setCanMove(false);
-			focusedUnit = NULL;
-			movingMode = false;
-			inUnitMenu = false;
-			resetStageColor();
+			if(menuOption == 2)
+			{
+				focusedUnit->setColor(sf::Color(84,84,84));
+				focusedUnit->setCanMove(false);
+				focusedUnit = NULL;
+				movingMode = false;
+				inUnitMenu = false;
+				resetStageColor();
+			}
+			else
+			{
+				resetStageColor();
+				inFireMode = true;
+				inUnitMenu = false;
+				seeRange(focusedUnit->getLocation(), focusedUnit->getFireRange(), sf::Color(255,0,0));
+			}
 		}
 	}
 	else
@@ -176,7 +221,7 @@ void Stage::checkConfirm()
 		{
 			movingMode = true;
 			focusedUnit = layout[cursorLoc.x][cursorLoc.y]->getUnitOn();
-			seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange());
+			seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange(), sf::Color(100, 149,237));
 		}
 }
 
@@ -188,6 +233,11 @@ void Stage::checkBack()
 		{
 			focusedUnit->setPositionAndLoc(prevUnitLoc, layout[prevUnitLoc.x][prevUnitLoc.y]->getPosition());
 			inUnitMenu = false;
+		}
+		else if (inFireMode)
+		{
+			inFireMode = false;
+			inUnitMenu = true;
 		}
 		else
 		{
@@ -237,7 +287,7 @@ sf::Vector2i Stage::moveUnit()
 	return start;
 }
 
-void Stage::seeRange(sf::Vector2i point, int movesLeft)
+void Stage::seeRange(sf::Vector2i point, int movesLeft, sf::Color color)
 {
 	if((movesLeft != 0) && ((point.x+1) < width) && ((point.x-1) >= 0) && ((point.y+1) < height) && ((point.y-1) >=0))
 	{
@@ -245,27 +295,27 @@ void Stage::seeRange(sf::Vector2i point, int movesLeft)
 
 		if(!layout[point.x+1][point.y]->getIsHazard())
 		{
-			layout[point.x+1][point.y]->setColor(sf::Color(100, 149,237));
+			layout[point.x+1][point.y]->setColor(color);
 			layout[point.x+1][point.y]->setCanMoveTo(true);
-			seeRange(sf::Vector2i(point.x+1, point.y), movesLeft);
+			seeRange(sf::Vector2i(point.x+1, point.y), movesLeft, color);
 		}
 		if(!layout[point.x-1][point.y]->getIsHazard())
 		{
-			layout[point.x-1][point.y]->setColor(sf::Color(100, 149,237));
+			layout[point.x-1][point.y]->setColor(color);
 			layout[point.x-1][point.y]->setCanMoveTo(true);
-			seeRange(sf::Vector2i(point.x-1, point.y), movesLeft);
+			seeRange(sf::Vector2i(point.x-1, point.y), movesLeft, color);
 		}
 		if(!layout[point.x][point.y-1]->getIsHazard())
 		{
-			layout[point.x][point.y-1]->setColor(sf::Color(100, 149,237));
+			layout[point.x][point.y-1]->setColor(color);
 			layout[point.x][point.y-1]->setCanMoveTo(true);
-			seeRange(sf::Vector2i(point.x, point.y-1), movesLeft);
+			seeRange(sf::Vector2i(point.x, point.y-1), movesLeft, color);
 		}
 		if(!layout[point.x][point.y+1]->getIsHazard())
 		{
-			layout[point.x][point.y+1]->setColor(sf::Color(100, 149,237));
+			layout[point.x][point.y+1]->setColor(color);
 			layout[point.x][point.y+1]->setCanMoveTo(true);
-			seeRange(sf::Vector2i(point.x, point.y+1), movesLeft);
+			seeRange(sf::Vector2i(point.x, point.y+1), movesLeft, color);
 		}
 	}
 }
@@ -283,14 +333,11 @@ void Stage::resetStageColor()
 
 void Stage::drawMenu(sf::RenderWindow* window)
 {
-	waitMenu.setPosition(menuTop.getPosition().x - 1, menuTop.getPosition().y + ((menuTop.getTexture()->getSize().y / 2) + (waitMenu.getTexture()->getSize().y / 2)));
-	menuBot.setPosition(waitMenu.getPosition().x, waitMenu.getPosition().y + ((waitMenu.getTexture()->getSize().y / 2) + (menuBot.getTexture()->getSize().y / 2)));
-	menuCursor.setPosition(waitMenu.getPosition().x - (waitMenu.getTexture()->getSize().x / 2), waitMenu.getPosition().y);
-
 	if(inUnitMenu)
 	{
-		window->draw(waitMenu);
 		window->draw(menuTop);
+		window->draw(fireMenu);
+		window->draw(waitMenu);
 		window->draw(menuBot);
 		window->draw(menuCursor);
 	}
