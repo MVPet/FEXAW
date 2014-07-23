@@ -14,12 +14,12 @@ public:
 
 	sf::Vector2f	getPosition();
 	bool			getHasUnit();
-	bool			getCanMoveTo();
+	bool			getCanUse();
 	bool			getIsHazard();
 	Unit*			getUnitOn();
 
 	void			setColor(sf::Color color);
-	void			setCanMoveTo(bool val);
+	void			setCanUse(bool val);
 
 protected:
 
@@ -28,7 +28,7 @@ private:
 
 	int			x;
 	int			y;
-	bool		canMoveTo;
+	bool		canUse;
 	bool		hasUnit;
 	bool		isHazard;
 	std::string name;

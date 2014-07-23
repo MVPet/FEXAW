@@ -1,6 +1,6 @@
 #include "Tile.hpp"
 
-Tile::Tile(std::string type, float locX, float locY) : hasUnit(false), unitOn(NULL), canMoveTo(false)
+Tile::Tile(std::string type, float locX, float locY) : hasUnit(false), unitOn(NULL), canUse(false)
 {
 	x = (8 + locX) * 2;
 	y = (8 + locY) * 2;
@@ -29,8 +29,8 @@ sf::Vector2f Tile::getPosition()
 bool Tile::getHasUnit()
 { return hasUnit; }
 
-bool Tile::getCanMoveTo()
-{ return canMoveTo; }
+bool Tile::getCanUse()
+{ return canUse; }
 
 Unit* Tile::getUnitOn()
 { return unitOn; }
@@ -41,8 +41,8 @@ bool Tile::getIsHazard()
 void Tile::setColor(sf::Color color)
 { sprite.setColor(color); }
 
-void Tile::setCanMoveTo(bool val)
-{ canMoveTo = val; }
+void Tile::setCanUse(bool val)
+{ canUse = val; }
 
 void Tile::load()
 {

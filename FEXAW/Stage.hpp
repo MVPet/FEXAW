@@ -4,6 +4,7 @@
 #include "TextureHolder.hpp"
 #include "Tile.hpp"
 #include "CO.hpp"
+#include "Menu.hpp"
 #include <queue>
 
 class Stage {
@@ -27,7 +28,7 @@ private:
 	void			resetStageColor();
 	void			drawMenu(sf::RenderWindow* window);
 
-	bool			movingMode;
+	bool			moveMode;
 	Unit*			focusedUnit;
 	bool			heldRight;
 	bool			moveRight;
@@ -45,6 +46,7 @@ private:
 	bool			inUnitMenu;
 	bool			inFireMode;
 	int				menuOption;
+
 	int				width;
 	int				height;
 	Tile***			layout;
@@ -60,6 +62,9 @@ private:
 	sf::Sprite		waitMenu;
 	sf::Sprite		fireMenu;
 	sf::Sprite		menuCursor;
+
+	Menu			unitMenu;
+	Menu			shopMenu;
 };
 
 #endif // Stage.hpp

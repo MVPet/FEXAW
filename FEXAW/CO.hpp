@@ -23,7 +23,7 @@ protected:
 private:
 	void	load();
 
-	//static int		playerNo;
+	static int		playerNo;
 	std::string		name;
 	Faction::ID		faction;
 

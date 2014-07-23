@@ -1,6 +1,6 @@
 #include "Stage.hpp"
 
-Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), movingMode(false), confirmDown(false), heldConfirm(false), inUnitMenu(false), backDown(false), heldBack(false), menuOption(1), inFireMode(false)
+Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), moveMode(false), confirmDown(false), heldConfirm(false), inUnitMenu(false), backDown(false), heldBack(false), menuOption(1), inFireMode(false)
 {
 	width = dem1;
 	height = dem2;
@@ -184,16 +184,16 @@ void Stage::readStage()
 
 void Stage::checkConfirm()
 {
-	if(movingMode)
+	if(moveMode)
 	{
 		if(!inUnitMenu)
 		{
-			if(layout[cursorLoc.x][cursorLoc.y]->getCanMoveTo())
+			if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
 				prevUnitLoc = moveUnit();
 		}
 		else if(inFireMode)
 		{
-			if(layout[cursorLoc.x][cursorLoc.y]->getCanMoveTo())
+			if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
 				focusedUnit->Battle(layout[cursorLoc.x][cursorLoc.y]->getUnitOn());
 		}
 		else
@@ -203,7 +203,7 @@ void Stage::checkConfirm()
 				focusedUnit->setColor(sf::Color(84,84,84));
 				focusedUnit->setCanMove(false);
 				focusedUnit = NULL;
-				movingMode = false;
+				moveMode = false;
 				inUnitMenu = false;
 				resetStageColor();
 			}
@@ -219,7 +219,7 @@ void Stage::checkConfirm()
 	else
 		if(layout[cursorLoc.x][cursorLoc.y]->getHasUnit() && layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getCanMove())
 		{
-			movingMode = true;
+			moveMode = true;
 			focusedUnit = layout[cursorLoc.x][cursorLoc.y]->getUnitOn();
 			seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange(), sf::Color(100, 149,237));
 		}
@@ -227,7 +227,7 @@ void Stage::checkConfirm()
 
 void Stage::checkBack()
 {
-	if(movingMode)
+	if(moveMode)
 	{
 		if(inUnitMenu)
 		{
@@ -241,7 +241,7 @@ void Stage::checkBack()
 		}
 		else
 		{
-			movingMode = false;
+			moveMode = false;
 			resetStageColor();
 		}
 	}
@@ -256,22 +256,22 @@ sf::Vector2i Stage::moveUnit()
 
 	while (tracer != cursorLoc)
 	{
-		if((tracer.x != cursorLoc.x) && (tracer.x < cursorLoc.x) && (layout[tracer.x+1][tracer.y]->getCanMoveTo()))
+		if((tracer.x != cursorLoc.x) && (tracer.x < cursorLoc.x) && (layout[tracer.x+1][tracer.y]->getCanUse()))
 		{
 			q.push('r');
 			tracer.x++;
 		}
-		else if((tracer.x != cursorLoc.x) && (tracer.x > cursorLoc.x) && (layout[tracer.x-1][tracer.y]->getCanMoveTo()))
+		else if((tracer.x != cursorLoc.x) && (tracer.x > cursorLoc.x) && (layout[tracer.x-1][tracer.y]->getCanUse()))
 		{
 			q.push('l');
 			tracer.x--;
 		}
-		else if((tracer.y != cursorLoc.y) && (tracer.y < cursorLoc.y) && (layout[tracer.x][tracer.y+1]->getCanMoveTo()))
+		else if((tracer.y != cursorLoc.y) && (tracer.y < cursorLoc.y) && (layout[tracer.x][tracer.y+1]->getCanUse()))
 		{
 			q.push('d');
 			tracer.y++;
 		}
-		else if((tracer.y != cursorLoc.y) && (tracer.y > cursorLoc.y) && (layout[tracer.x][tracer.y-1]->getCanMoveTo()))
+		else if((tracer.y != cursorLoc.y) && (tracer.y > cursorLoc.y) && (layout[tracer.x][tracer.y-1]->getCanUse()))
 		{
 			q.push('u');
 			tracer.y--;
@@ -296,25 +296,25 @@ void Stage::seeRange(sf::Vector2i point, int movesLeft, sf::Color color)
 		if(!layout[point.x+1][point.y]->getIsHazard())
 		{
 			layout[point.x+1][point.y]->setColor(color);
-			layout[point.x+1][point.y]->setCanMoveTo(true);
+			layout[point.x+1][point.y]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x+1, point.y), movesLeft, color);
 		}
 		if(!layout[point.x-1][point.y]->getIsHazard())
 		{
 			layout[point.x-1][point.y]->setColor(color);
-			layout[point.x-1][point.y]->setCanMoveTo(true);
+			layout[point.x-1][point.y]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x-1, point.y), movesLeft, color);
 		}
 		if(!layout[point.x][point.y-1]->getIsHazard())
 		{
 			layout[point.x][point.y-1]->setColor(color);
-			layout[point.x][point.y-1]->setCanMoveTo(true);
+			layout[point.x][point.y-1]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x, point.y-1), movesLeft, color);
 		}
 		if(!layout[point.x][point.y+1]->getIsHazard())
 		{
 			layout[point.x][point.y+1]->setColor(color);
-			layout[point.x][point.y+1]->setCanMoveTo(true);
+			layout[point.x][point.y+1]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x, point.y+1), movesLeft, color);
 		}
 	}
@@ -324,9 +324,9 @@ void Stage::resetStageColor()
 {
 	for(int i = 0; i < width; i++)
 		for(int j = 0; j < height; j++)
-			if(layout[i][j]->getCanMoveTo())
+			if(layout[i][j]->getCanUse())
 			{
-				layout[i][j]->setCanMoveTo(false);
+				layout[i][j]->setCanUse(false);
 				layout[i][j]->setColor(sf::Color::White);
 			}
 }

@@ -1,9 +1,10 @@
 #include  "CO.hpp"
 
+int CO::playerNo = 0;
+
 CO::CO(std::string nam, Faction::ID side, int unitNum)
 {
-	//playerNo = 0;
-	//playerNo++;
+	CO::playerNo++;
 
 	name = nam;
 	faction = side;

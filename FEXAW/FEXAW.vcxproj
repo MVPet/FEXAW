@@ -87,6 +87,7 @@
     <ClCompile Include="CO.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Tags.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
@@ -96,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="CO.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Menu.hpp" />
     <ClInclude Include="Stage.hpp" />
     <ClInclude Include="Tags.hpp" />
     <ClInclude Include="TextureHolder.hpp" />
