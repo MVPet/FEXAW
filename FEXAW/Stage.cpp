@@ -1,6 +1,6 @@
 #include "Stage.hpp"
 
-Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), moveMode(false), confirmDown(false), heldConfirm(false), inUnitMenu(false), backDown(false), heldBack(false), menuOption(1), inFireMode(false)
+Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), moveMode(false), confirmDown(false), heldConfirm(false), inMenu(false), backDown(false), heldBack(false), fireMode(false)
 {
 	width = dem1;
 	height = dem2;
@@ -15,7 +15,7 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldRight = true;
 
-		if(!inUnitMenu)
+		if(!inMenu)
 		{
 			if (cursorLoc.x != (width-1))
 				cursorLoc.x += 1;
@@ -29,7 +29,7 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldLeft = true;
 
-		if(!inUnitMenu)
+		if(!inMenu)
 		{
 			if (cursorLoc.x != 0)
 				cursorLoc.x -= 1;
@@ -43,7 +43,7 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldUp = true;
 
-		if(!inUnitMenu)
+		if(!inMenu)
 		{
 			if (cursorLoc.y != 0)
 				cursorLoc.y -= 1;
@@ -51,8 +51,7 @@ void Stage::update(sf::Time deltaTime)
 		}
 		else
 		{
-			menuOption = 1;
-			menuCursor.setPosition(fireMenu.getPosition().x - (fireMenu.getTexture()->getSize().x / 2), fireMenu.getPosition().y);
+			curMenu->setCurOption(curMenu->getCurOption() - 1);
 		}
 	}
 	else
@@ -62,7 +61,7 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldDown = true;
 
-		if(!inUnitMenu)
+		if(!inMenu)
 		{
 			if (cursorLoc.y != (height-1))
 				cursorLoc.y += 1;
@@ -70,8 +69,7 @@ void Stage::update(sf::Time deltaTime)
 		}
 		else
 		{
-			menuOption = 2;
-			menuCursor.setPosition(waitMenu.getPosition().x - (waitMenu.getTexture()->getSize().x / 2), waitMenu.getPosition().y);
+			curMenu->setCurOption(curMenu->getCurOption() + 1);
 		}
 	}
 	else 
@@ -123,7 +121,9 @@ void Stage::draw(sf::RenderWindow* window)
 	player1->drawUnits(window);
 	window->draw(cursor);
 	player1->drawHUD(window);
-	drawMenu(window);
+
+	if(inMenu)
+		curMenu->draw(window);
 }
 
 void Stage::load()
@@ -137,7 +137,7 @@ void Stage::load()
 	cursor.setOrigin(16.f, 16.f);
 	cursorLoc = sf::Vector2i(7,5);
 
-	textures.load(Textures::MenuTop, "Assets/Misc/MenuTop.png");
+	/*textures.load(Textures::MenuTop, "Assets/Misc/MenuTop.png");
 	menuTop.setTexture(textures.get(Textures::MenuTop));
 	menuTop.setPosition(100.f, 100.f);
 	menuTop.setOrigin(53.f, 5.5);
@@ -160,7 +160,10 @@ void Stage::load()
 	textures.load(Textures::MenuCursor, "Assets/Misc/MenuCursor.png");
 	menuCursor.setTexture(textures.get(Textures::MenuCursor));
 	menuCursor.setOrigin(15.f, 15.f);
-	menuCursor.setPosition(fireMenu.getPosition().x - (fireMenu.getTexture()->getSize().x / 2), fireMenu.getPosition().y);
+	menuCursor.setPosition(fireMenu.getPosition().x - (fireMenu.getTexture()->getSize().x / 2), fireMenu.getPosition().y);*/
+
+	unitMenu = new Menu(Tags::UnitMenu, 2, sf::Vector2f(100,100));
+	curMenu = unitMenu;
 
 	player1 = new CO(Tags::Andy, Faction::AW, 10);
 }
@@ -175,7 +178,10 @@ void Stage::readStage()
 		layout[i] = new Tile*[height];
 
 		for (int j = 0; j < height; j++)
-			layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16));
+			if((i != 3) || (j != 2))
+				layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16));
+			else
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16));
 	}
 
 	cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
@@ -186,32 +192,32 @@ void Stage::checkConfirm()
 {
 	if(moveMode)
 	{
-		if(!inUnitMenu)
+		if(!inMenu)
 		{
 			if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
 				prevUnitLoc = moveUnit();
 		}
-		else if(inFireMode)
+		else if(fireMode)
 		{
 			if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
 				focusedUnit->Battle(layout[cursorLoc.x][cursorLoc.y]->getUnitOn());
 		}
 		else
 		{
-			if(menuOption == 2)
+			if(curMenu->getCurOption() == 1)
 			{
 				focusedUnit->setColor(sf::Color(84,84,84));
 				focusedUnit->setCanMove(false);
 				focusedUnit = NULL;
 				moveMode = false;
-				inUnitMenu = false;
+				inMenu = false;
 				resetStageColor();
 			}
 			else
 			{
 				resetStageColor();
-				inFireMode = true;
-				inUnitMenu = false;
+				fireMode = true;
+				inMenu = false;
 				seeRange(focusedUnit->getLocation(), focusedUnit->getFireRange(), sf::Color(255,0,0));
 			}
 		}
@@ -229,15 +235,15 @@ void Stage::checkBack()
 {
 	if(moveMode)
 	{
-		if(inUnitMenu)
+		if(inMenu)
 		{
 			focusedUnit->setPositionAndLoc(prevUnitLoc, layout[prevUnitLoc.x][prevUnitLoc.y]->getPosition());
-			inUnitMenu = false;
+			inMenu = false;
 		}
-		else if (inFireMode)
+		else if (fireMode)
 		{
-			inFireMode = false;
-			inUnitMenu = true;
+			fireMode = false;
+			inMenu = true;
 		}
 		else
 		{
@@ -283,7 +289,8 @@ sf::Vector2i Stage::moveUnit()
 	layout[start.x][start.y]->setUnitOn(NULL);
 	layout[cursorLoc.x][cursorLoc.y]->setUnitOn(focusedUnit);
 
-	inUnitMenu = true;
+	inMenu = true;
+	curMenu = unitMenu;
 	return start;
 }
 
@@ -329,16 +336,4 @@ void Stage::resetStageColor()
 				layout[i][j]->setCanUse(false);
 				layout[i][j]->setColor(sf::Color::White);
 			}
-}
-
-void Stage::drawMenu(sf::RenderWindow* window)
-{
-	if(inUnitMenu)
-	{
-		window->draw(menuTop);
-		window->draw(fireMenu);
-		window->draw(waitMenu);
-		window->draw(menuBot);
-		window->draw(menuCursor);
-	}
 }

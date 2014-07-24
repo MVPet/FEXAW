@@ -26,9 +26,9 @@ private:
 	bool			canUnitAttack();
 	void			seeRange(sf::Vector2i point, int movesLeft, sf::Color color);
 	void			resetStageColor();
-	void			drawMenu(sf::RenderWindow* window);
 
 	bool			moveMode;
+	bool			fireMode;
 	Unit*			focusedUnit;
 	bool			heldRight;
 	bool			moveRight;
@@ -43,9 +43,9 @@ private:
 	bool			heldBack;
 	bool			backDown;
 
-	bool			inUnitMenu;
-	bool			inFireMode;
-	int				menuOption;
+	//bool			inUnitMenu;
+	bool			inMenu;
+	//int			menuOption;
 
 	int				width;
 	int				height;
@@ -57,14 +57,15 @@ private:
 	sf::Sprite		cursor;
 	CO*				player1;
 
-	sf::Sprite		menuTop;
-	sf::Sprite		menuBot;
-	sf::Sprite		waitMenu;
-	sf::Sprite		fireMenu;
-	sf::Sprite		menuCursor;
+	//sf::Sprite		menuTop;
+//	sf::Sprite		menuBot;
+//	sf::Sprite		waitMenu;
+//	sf::Sprite		fireMenu;
+//	sf::Sprite		menuCursor;
 
-	Menu			unitMenu;
-	Menu			shopMenu;
+	Menu*			curMenu;
+	Menu*			unitMenu;
+	Menu*			shopMenu;
 };
 
 #endif // Stage.hpp

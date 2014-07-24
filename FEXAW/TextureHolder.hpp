@@ -6,7 +6,7 @@
 
 namespace Textures
 {
-	enum ID { P1HUD, Cursor, MenuTop, MenuBot, WaitMenu, FireMenu, MenuCursor };
+	enum ID { P1HUD, Cursor, MenuCursor, One };
 }
 
 class TextureHolder

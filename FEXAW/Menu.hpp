@@ -1,33 +1,38 @@
 #ifndef _MENU
 #define _MENU
 
-#include "TextureHolder.hpp"
-
-namespace Menus
-{
-	enum ID { Unit, Shop };
-}
+#include <SFML/Graphics.hpp>
+#include "Tags.hpp"
+#include <iostream>
+#include <sstream>
 
 class Menu 
 {
 public:
-	Menu(Menus::ID type, int val);
+	Menu(std::string nam, int val, sf::Vector2f pos);
 
+	void draw(sf::RenderWindow* window);
 	int getCurOption();
-	int setCurOption(int val);
+	void setCurOption(int val);
 
 protected:
 
 private:
 	void load();
-	
-	Menus::ID id;
+	std::string convertIntToString(int i);
+
+	std::string name;
 	int	numOfOptions;
 	int curOption;
-	TextureHolder textures;
+	sf::Vector2f position;
+	sf::Texture* textures;
+	sf::Texture	backTex;
+	sf::Texture	curTex;
 	sf::Sprite* options;
 	sf::Sprite background;
 	sf::Sprite cursor;
+
+	sf::Texture* texture;
 };
 
 #endif // Menu.hpp
