@@ -43,9 +43,7 @@ private:
 	bool			heldBack;
 	bool			backDown;
 
-	//bool			inUnitMenu;
 	bool			inMenu;
-	//int			menuOption;
 
 	int				width;
 	int				height;
@@ -56,12 +54,7 @@ private:
 	sf::Vector2i	prevUnitLoc;
 	sf::Sprite		cursor;
 	CO*				player1;
-
-	//sf::Sprite		menuTop;
-//	sf::Sprite		menuBot;
-//	sf::Sprite		waitMenu;
-//	sf::Sprite		fireMenu;
-//	sf::Sprite		menuCursor;
+	CO*				curPlayer;
 
 	Menu*			curMenu;
 	Menu*			unitMenu;

@@ -15,8 +15,9 @@ public:
 
 	void			drawHUD(sf::RenderWindow* window);
 	void			drawUnits(sf::RenderWindow* window);
-	Unit*			addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range, int fRange);
+	Unit*			addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range, int fRange, bool canDo);
 	Faction::ID		getFaction();
+	int				getPlayerNo();
 
 protected:
 

@@ -137,35 +137,13 @@ void Stage::load()
 	cursor.setOrigin(16.f, 16.f);
 	cursorLoc = sf::Vector2i(7,5);
 
-	/*textures.load(Textures::MenuTop, "Assets/Misc/MenuTop.png");
-	menuTop.setTexture(textures.get(Textures::MenuTop));
-	menuTop.setPosition(100.f, 100.f);
-	menuTop.setOrigin(53.f, 5.5);
+	unitMenu = new Menu(Tags::UnitMenu, 3, sf::Vector2f(100,100));
+	shopMenu = new Menu(Tags::ShopMenu, 1, sf::Vector2f(140,185));
 
-	textures.load(Textures::FireMenu, "Assets/Misc/FireMenu.png");
-	fireMenu.setTexture(textures.get(Textures::FireMenu));
-	fireMenu.setOrigin(53.5, 17.f);
-	fireMenu.setPosition(menuTop.getPosition().x - 1, menuTop.getPosition().y + ((menuTop.getTexture()->getSize().y / 2) + (fireMenu.getTexture()->getSize().y / 2)));
-
-	textures.load(Textures::WaitMenu, "Assets/Misc/WaitMenu.png");
-	waitMenu.setTexture(textures.get(Textures::WaitMenu));
-	waitMenu.setOrigin(53.5, 16.5);
-	waitMenu.setPosition(fireMenu.getPosition().x - 1, fireMenu.getPosition().y + ((fireMenu.getTexture()->getSize().y / 2) + (waitMenu.getTexture()->getSize().y / 2)));
-
-	textures.load(Textures::MenuBot, "Assets/Misc/MenuBot.png");
-	menuBot.setTexture(textures.get(Textures::MenuBot));
-	menuBot.setOrigin(53.5, 7.f);
-	menuBot.setPosition(waitMenu.getPosition().x, waitMenu.getPosition().y + ((waitMenu.getTexture()->getSize().y / 2) + (menuBot.getTexture()->getSize().y / 2)));
-
-	textures.load(Textures::MenuCursor, "Assets/Misc/MenuCursor.png");
-	menuCursor.setTexture(textures.get(Textures::MenuCursor));
-	menuCursor.setOrigin(15.f, 15.f);
-	menuCursor.setPosition(fireMenu.getPosition().x - (fireMenu.getTexture()->getSize().x / 2), fireMenu.getPosition().y);*/
-
-	unitMenu = new Menu(Tags::UnitMenu, 2, sf::Vector2f(100,100));
 	curMenu = unitMenu;
 
 	player1 = new CO(Tags::Andy, Faction::AW, 10);
+	curPlayer = player1;
 }
 
 // temporary test stage, this function will not stay the same
@@ -177,15 +155,16 @@ void Stage::readStage()
 	{
 		layout[i] = new Tile*[height];
 
+
 		for (int j = 0; j < height; j++)
-			if((i != 3) || (j != 2))
-				layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16));
+			if((i != 7) || (j != 2))
+				layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16), 0);
 			else
-				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16));
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), 0);
 	}
 
 	cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
-	layout[cursorLoc.x][cursorLoc.y]->setUnitOn(player1->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1));
+	layout[cursorLoc.x][cursorLoc.y]->setUnitOn(player1->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1, true));
 }
 
 void Stage::checkConfirm()
@@ -204,8 +183,18 @@ void Stage::checkConfirm()
 		}
 		else
 		{
-			if(curMenu->getCurOption() == 1)
+			if(curMenu->getCurOption() == 2)
 			{
+				focusedUnit->setColor(sf::Color(84,84,84));
+				focusedUnit->setCanMove(false);
+				focusedUnit = NULL;
+				moveMode = false;
+				inMenu = false;
+				resetStageColor();
+			}
+			else if((curMenu->getCurOption() == 1) && (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory))
+			{
+				layout[cursorLoc.x][cursorLoc.y]->changeOwner(focusedUnit->getOwnedBy());
 				focusedUnit->setColor(sf::Color(84,84,84));
 				focusedUnit->setCanMove(false);
 				focusedUnit = NULL;
@@ -222,13 +211,30 @@ void Stage::checkConfirm()
 			}
 		}
 	}
+	else if (inMenu && (curMenu->getType() == Tags::ShopMenu))
+	{
+		switch(curMenu->getCurOption())
+		{
+			case 0:
+				layout[cursorLoc.x][cursorLoc.y]->setUnitOn(player1->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1, false));
+				inMenu = false;
+				break;
+		}
+	}
 	else
-		if(layout[cursorLoc.x][cursorLoc.y]->getHasUnit() && layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getCanMove())
+	{
+		if(layout[cursorLoc.x][cursorLoc.y]->getHasUnit() && layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getCanMove() && (layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getOwnedBy() == curPlayer->getPlayerNo()))
 		{
 			moveMode = true;
 			focusedUnit = layout[cursorLoc.x][cursorLoc.y]->getUnitOn();
 			seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange(), sf::Color(100, 149,237));
 		}
+		else if((layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory) && (!layout[cursorLoc.x][cursorLoc.y]->getHasUnit()) && (layout[cursorLoc.x][cursorLoc.y]->getOwnedBy() == curPlayer->getPlayerNo()))
+		{
+			inMenu = true;
+			curMenu = shopMenu;
+		}
+	}
 }
 
 void Stage::checkBack()
@@ -251,6 +257,9 @@ void Stage::checkBack()
 			resetStageColor();
 		}
 	}
+	else
+		if(inMenu)
+			inMenu = false;
 
 }
 

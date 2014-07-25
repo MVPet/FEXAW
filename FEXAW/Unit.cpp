@@ -1,11 +1,18 @@
 #include "Unit.hpp"
 
-Unit::Unit(std::string nam, int range, int fRange) : canMove(true), canFire(false)
+Unit::Unit(std::string nam, int range, int fRange, bool canDo, int playerNo)
 {
 	name = nam;
 	health = 10;
 	moveRange = range;
 	fireRange = fRange;
+	ownedBy = playerNo;
+
+	canMove = canDo;
+	canFire = canDo;
+
+	if(!canDo)
+		sprite.setColor(sf::Color(84,84,84));
 
 	load();
 }
@@ -48,6 +55,9 @@ int Unit::getMoveRange()
 
 int Unit::getFireRange()
 { return fireRange; }
+
+int Unit::getOwnedBy()
+{ return ownedBy; }
 
 void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 {

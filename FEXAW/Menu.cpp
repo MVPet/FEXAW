@@ -5,7 +5,6 @@ Menu::Menu(std::string nam, int val, sf::Vector2f pos) : curOption(0)
 	position = pos;
 	name = nam;
 	numOfOptions = val;
-	texture = new sf::Texture();
 	load();
 }
 
@@ -16,6 +15,9 @@ void Menu::draw(sf::RenderWindow* window)
 		window->draw(options[i]);
 	window->draw(cursor);
 }
+
+std::string Menu::getType()
+{ return name; }
 
 int Menu::getCurOption()
 { return curOption; }

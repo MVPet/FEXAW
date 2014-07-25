@@ -10,7 +10,7 @@
 class Unit
 {
 public:
-	Unit(std::string nam, int range, int fRange);
+	Unit(std::string nam, int range, int fRange, bool canDo, int playerNo);
 
 	void			draw(sf::RenderWindow* window);
 	void			setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos);
@@ -18,6 +18,7 @@ public:
 	bool			getCanMove();
 	int				getMoveRange();
 	int				getFireRange();
+	int				getOwnedBy();
 	void			MoveTo(sf::Vector2i loc, std::queue<char>* q);
 	void			Battle(Unit* enemy);
 
@@ -35,6 +36,7 @@ private:
 	bool		canFire;
 	int			moveRange;
 	int			fireRange;
+	int			ownedBy;
 
 	sf::Vector2i	location;
 	sf::Texture		texture;

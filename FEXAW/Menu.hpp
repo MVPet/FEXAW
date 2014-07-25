@@ -12,6 +12,7 @@ public:
 	Menu(std::string nam, int val, sf::Vector2f pos);
 
 	void draw(sf::RenderWindow* window);
+	std::string getType();
 	int getCurOption();
 	void setCurOption(int val);
 
@@ -31,8 +32,6 @@ private:
 	sf::Sprite* options;
 	sf::Sprite background;
 	sf::Sprite cursor;
-
-	sf::Texture* texture;
 };
 
 #endif // Menu.hpp
