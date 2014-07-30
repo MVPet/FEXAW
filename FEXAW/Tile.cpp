@@ -62,7 +62,7 @@ void Tile::load()
 	int numOfTex;
 
 	if(name == Tags::Factory)
-		numOfTex = 2;
+		numOfTex = 3;
 	else
 		numOfTex = 1;
 

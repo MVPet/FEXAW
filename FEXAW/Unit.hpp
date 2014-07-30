@@ -2,6 +2,7 @@
 #define _UNIT
 
 #include <iostream>
+#include <sstream>
 #include <queue>
 #include "SFML/Graphics.hpp"
 #include "SFML/Graphics/Color.hpp"
@@ -21,6 +22,7 @@ public:
 	int				getOwnedBy();
 	void			MoveTo(sf::Vector2i loc, std::queue<char>* q);
 	void			Battle(Unit* enemy);
+	void			newTurn();
 
 	void			setColor(sf::Color color);
 	void			setCanMove(bool val);
@@ -29,6 +31,7 @@ protected:
 
 private:
 	void	load();
+	std::string convertIntToString(int i);
 
 	std::string	name;
 	int			health;
@@ -39,7 +42,7 @@ private:
 	int			ownedBy;
 
 	sf::Vector2i	location;
-	sf::Texture		texture;
+	sf::Texture*	texture;
 	sf::Sprite		sprite;
 };
 

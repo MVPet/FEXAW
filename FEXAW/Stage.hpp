@@ -53,12 +53,14 @@ private:
 	sf::Vector2i	cursorLoc;
 	sf::Vector2i	prevUnitLoc;
 	sf::Sprite		cursor;
-	CO*				player1;
+	CO**			players;
 	CO*				curPlayer;
+	int				numOfPlayers;
 
 	Menu*			curMenu;
 	Menu*			unitMenu;
 	Menu*			shopMenu;
+	Menu*			turnMenu;
 };
 
 #endif // Stage.hpp

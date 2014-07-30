@@ -37,12 +37,19 @@ void Unit::setCanMove(bool val)
 
 void Unit::load()
 {
-	std::string filename = "Assets/Units/" + name + ".png";
+	int numOfTex = 2;
 
-	if(!texture.loadFromFile(filename))
-		throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
+	texture = new sf::Texture[numOfTex+1];
 
-	sprite.setTexture(texture);
+	for (int i = 1; i <= numOfTex; i++)
+	{
+		std::string filename = "Assets/Units/" + convertIntToString(i) + name + ".png";
+	
+		if(!texture[i].loadFromFile(filename))
+			throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
+	}
+
+	sprite.setTexture(texture[ownedBy]);
 	sprite.setOrigin(8.f, 8.f);
 	sprite.setScale(2.f, 2.f);
 }
@@ -84,5 +91,19 @@ void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 
 void Unit::Battle(Unit* enemy)
 {
-	//deal damage
+	// should do damage
+	delete enemy;
+}
+
+void Unit::newTurn()
+{
+	canMove = true;
+	canFire = true;
+
+	sprite.setColor(sf::Color::White);
+}
+
+std::string Unit::convertIntToString(int i)
+{
+	return static_cast<std::ostringstream*>( &(std::ostringstream() << i))->str();
 }

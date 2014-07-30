@@ -1,11 +1,8 @@
 #include  "CO.hpp"
 
-int CO::playerNo = 0;
-
-CO::CO(std::string nam, Faction::ID side, int unitNum)
+CO::CO(std::string nam, Faction::ID side, int unitNum, int pNo)
 {
-	CO::playerNo++;
-
+	playerNo = pNo;
 	name = nam;
 	faction = side;
 	unitList = new Unit*[unitNum];
@@ -20,7 +17,8 @@ void CO::drawHUD(sf::RenderWindow* window)
 void CO::drawUnits(sf::RenderWindow* window)
 {
 	for (int i = 0; i < numOfUnits; i++)
-		unitList[i]->draw(window);
+		if(unitList[i] != NULL)
+			unitList[i]->draw(window);
 }
 
 void CO::load()
@@ -56,3 +54,14 @@ Faction::ID CO::getFaction()
 
 int CO::getPlayerNo()
 { return playerNo; }
+
+void CO::newTurn()
+{
+	if(numOfUnits > 0)
+	{
+		for (int i = 0; i < numOfUnits; i++)
+		{
+			unitList[i]->newTurn();
+		}
+	}
+}

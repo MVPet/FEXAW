@@ -10,3 +10,4 @@ const std::string Tags::Infantry = "Infantry";
 
 const std::string Tags::UnitMenu = "UnitMenu";
 const std::string Tags::ShopMenu = "ShopMenu";
+const std::string Tags::TurnMenu = "TurnMenu";

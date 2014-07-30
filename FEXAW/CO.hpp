@@ -11,7 +11,7 @@ namespace Faction
 class CO
 {
 public:
-	CO(std::string nam, Faction::ID side, int unitNum);
+	CO(std::string nam, Faction::ID side, int unitNum, int pNo);
 
 	void			drawHUD(sf::RenderWindow* window);
 	void			drawUnits(sf::RenderWindow* window);
@@ -19,12 +19,14 @@ public:
 	Faction::ID		getFaction();
 	int				getPlayerNo();
 
+	void			newTurn();
+
 protected:
 
 private:
 	void	load();
 
-	static int		playerNo;
+	int				playerNo;
 	std::string		name;
 	Faction::ID		faction;
 

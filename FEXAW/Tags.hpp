@@ -16,6 +16,7 @@ public:
 
 	static const std::string UnitMenu;
 	static const std::string ShopMenu;
+	static const std::string TurnMenu;
 };
 
 #endif //Tags.hpp
