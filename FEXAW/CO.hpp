@@ -15,9 +15,12 @@ public:
 
 	void			drawHUD(sf::RenderWindow* window);
 	void			drawUnits(sf::RenderWindow* window);
-	Unit*			addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range, int fRange, bool canDo);
+	Unit*			addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range, int fRange, int dmg, bool canDo);
+	void			removeUnit(int indexNo);
 	Faction::ID		getFaction();
 	int				getPlayerNo();
+	int				getMaxUnits();
+	int				getNumOfUnits();
 
 	void			newTurn();
 
@@ -36,6 +39,7 @@ private:
 	sf::Texture		mugTex;
 	sf::Sprite		mugshot;
 
+	int				maxUnits;
 	int				numOfUnits;
 	Unit**			unitList;
 };

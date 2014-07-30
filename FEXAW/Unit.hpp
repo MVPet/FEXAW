@@ -11,7 +11,7 @@
 class Unit
 {
 public:
-	Unit(std::string nam, int range, int fRange, bool canDo, int playerNo);
+	Unit(std::string nam, int range, int fRange, int dmg, bool canDo, int playerNo, int iNo);
 
 	void			draw(sf::RenderWindow* window);
 	void			setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos);
@@ -20,12 +20,16 @@ public:
 	int				getMoveRange();
 	int				getFireRange();
 	int				getOwnedBy();
+	int				getHealth();
+	int				getAttackPower();
+	int				getIndexNo();
+
 	void			MoveTo(sf::Vector2i loc, std::queue<char>* q);
-	void			Battle(Unit* enemy);
 	void			newTurn();
 
 	void			setColor(sf::Color color);
 	void			setCanMove(bool val);
+	void			setHealth(int val);
 
 protected:
 
@@ -39,7 +43,9 @@ private:
 	bool		canFire;
 	int			moveRange;
 	int			fireRange;
+	int			attackPower;
 	int			ownedBy;
+	int			indexNo;	
 
 	sf::Vector2i	location;
 	sf::Texture*	texture;

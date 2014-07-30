@@ -1,12 +1,13 @@
 #include "Unit.hpp"
 
-Unit::Unit(std::string nam, int range, int fRange, bool canDo, int playerNo)
+Unit::Unit(std::string nam, int range, int fRange, int dmg, bool canDo, int playerNo, int iNo) : health(1)
 {
 	name = nam;
-	health = 10;
 	moveRange = range;
 	fireRange = fRange;
+	attackPower = dmg;
 	ownedBy = playerNo;
+	indexNo = iNo;
 
 	canMove = canDo;
 	canFire = canDo;
@@ -34,6 +35,9 @@ void Unit::setColor(sf::Color color)
 
 void Unit::setCanMove(bool val)
 { canMove = val; }
+
+void Unit::setHealth(int val)
+{ health = val; }
 
 void Unit::load()
 {
@@ -66,6 +70,15 @@ int Unit::getFireRange()
 int Unit::getOwnedBy()
 { return ownedBy; }
 
+int Unit::getHealth()
+{ return health; }
+
+int Unit::getAttackPower()
+{ return attackPower; }
+
+int Unit::getIndexNo()
+{ return indexNo; }
+
 void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 {
 	float moveX = 0;
@@ -87,12 +100,6 @@ void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 
 	sprite.setPosition(sprite.getPosition().x + moveX, sprite.getPosition().y + moveY);
 	location = loc;
-}
-
-void Unit::Battle(Unit* enemy)
-{
-	// should do damage
-	delete enemy;
 }
 
 void Unit::newTurn()

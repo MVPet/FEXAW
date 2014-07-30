@@ -27,6 +27,12 @@ private:
 	void			seeRange(sf::Vector2i point, int movesLeft, sf::Color color);
 	void			resetStageColor();
 
+	void			enableMoveMode(bool focusOnUnit);
+	void			enableFireMode();
+	void			enableMenu(Menu* newMenu);
+	void			unitWait();
+	void			unitBattle(Unit* enemy);
+
 	bool			moveMode;
 	bool			fireMode;
 	Unit*			focusedUnit;

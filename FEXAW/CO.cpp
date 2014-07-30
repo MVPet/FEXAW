@@ -5,7 +5,9 @@ CO::CO(std::string nam, Faction::ID side, int unitNum, int pNo)
 	playerNo = pNo;
 	name = nam;
 	faction = side;
-	unitList = new Unit*[unitNum];
+	maxUnits = unitNum;
+
+	unitList = new Unit*[maxUnits];
 	numOfUnits = 0;
 
 	load();
@@ -39,9 +41,9 @@ void CO::load()
 	mugshot.setTexture(mugTex);
 }
 
-Unit* CO::addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range, int fRange, bool canDo)
+Unit* CO::addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int range, int fRange, int dmg, bool canDo)
 {
-	unitList[numOfUnits] = new Unit(name, range, fRange, canDo, playerNo);
+	unitList[numOfUnits] = new Unit(name, range, fRange, dmg, canDo, playerNo, numOfUnits);
 	unitList[numOfUnits]->setPositionAndLoc(loc, pos);
 
 	numOfUnits++;
@@ -49,11 +51,29 @@ Unit* CO::addUnit(std::string name, sf::Vector2i loc, sf::Vector2f pos, int rang
 	return unitList[numOfUnits - 1];
 }
 
+void CO::removeUnit(int indexNo)
+{
+	delete unitList[indexNo];
+	numOfUnits--;
+
+	for(int i = indexNo; i < numOfUnits; i++)
+	{
+		unitList[i] = unitList[i+1];
+		unitList[i+1] = NULL;
+	}
+}
+
 Faction::ID CO::getFaction()
 { return faction; }
 
 int CO::getPlayerNo()
 { return playerNo; }
+
+int CO::getMaxUnits()
+{ return maxUnits; }
+
+int CO::getNumOfUnits()
+{ return numOfUnits; }
 
 void CO::newTurn()
 {

@@ -171,64 +171,57 @@ void Stage::readStage()
 	}
 
 	cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
-	//layout[cursorLoc.x][cursorLoc.y]->setUnitOn(players[0]->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1, true));
-	//layout[cursorLoc.x][cursorLoc.y]->setUnitOn(players[1]->addUnit(Tags::Infantry, sf::Vector2i(4,1), layout[4][1]->getPosition(), 3, 1, true));
 }
 
 void Stage::checkConfirm()
 {
 	if(moveMode)
 	{
-		if(fireMode)
+		if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
+			prevUnitLoc = moveUnit();
+	}
+
+	else if(fireMode)
+	{
+		if(layout[cursorLoc.x][cursorLoc.y]->getCanUse() && layout[cursorLoc.x][cursorLoc.y]->getHasUnit())
 		{
-			if(layout[cursorLoc.x][cursorLoc.y]->getCanUse() && layout[cursorLoc.x][cursorLoc.y]->getHasUnit())
-				layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->setColor(sf::Color::Black);
-		}
-		else if(!inMenu)
-		{
-			if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
-				prevUnitLoc = moveUnit();
-		}
-		else
-		{
-			if(curMenu->getCurOption() == 2)
-			{
-				focusedUnit->setColor(sf::Color(84,84,84));
-				focusedUnit->setCanMove(false);
-				focusedUnit = NULL;
-				moveMode = false;
-				inMenu = false;
-				resetStageColor();
-			}
-			else if((curMenu->getCurOption() == 1) && (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory))
-			{
-				layout[cursorLoc.x][cursorLoc.y]->changeOwner(focusedUnit->getOwnedBy());
-				focusedUnit->setColor(sf::Color(84,84,84));
-				focusedUnit->setCanMove(false);
-				focusedUnit = NULL;
-				moveMode = false;
-				inMenu = false;
-				resetStageColor();
-			}
-			else
-			{
-				resetStageColor();
-				fireMode = true;
-				inMenu = false;
-				seeRange(focusedUnit->getLocation(), focusedUnit->getFireRange(), sf::Color(255,0,0));
-			}
+			unitBattle(layout[cursorLoc.x][cursorLoc.y]->getUnitOn());
+			unitWait();
+			fireMode = false;
 		}
 	}
+
+	else if(inMenu && curMenu->getType() == Tags::UnitMenu)
+	{
+		switch(curMenu->getCurOption())
+		{
+		case 0:
+			enableFireMode();
+			break;
+		case 1:
+			if (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory)
+			{
+				layout[cursorLoc.x][cursorLoc.y]->changeOwner(focusedUnit->getOwnedBy());
+				unitWait();
+			}
+			break;
+		case 2:
+			unitWait();
+			break;
+		}
+	}
+
 	else if (inMenu && (curMenu->getType() == Tags::ShopMenu))
 	{
 		switch(curMenu->getCurOption())
 		{
 			case 0:
-				layout[cursorLoc.x][cursorLoc.y]->setUnitOn(curPlayer->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1, false));
+				layout[cursorLoc.x][cursorLoc.y]->setUnitOn(curPlayer->addUnit(Tags::Infantry, cursorLoc, cursor.getPosition(), 3, 1, 1, false));
 				inMenu = false;
 				break;
 		}
 	}
+
 	else if (inMenu && (curMenu->getType() == Tags::TurnMenu))
 	{
 		switch(curMenu->getCurOption())
@@ -244,48 +237,38 @@ void Stage::checkConfirm()
 				break;
 		}
 	}
+
 	else if(layout[cursorLoc.x][cursorLoc.y]->getHasUnit() && layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getCanMove() && (layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getOwnedBy() == curPlayer->getPlayerNo()))
-	{
-		moveMode = true;
-		focusedUnit = layout[cursorLoc.x][cursorLoc.y]->getUnitOn();
-		seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange(), sf::Color(100, 149,237));
-	}
-	else if((layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory) && (!layout[cursorLoc.x][cursorLoc.y]->getHasUnit()) && (layout[cursorLoc.x][cursorLoc.y]->getOwnedBy() == curPlayer->getPlayerNo()))
-	{
-		inMenu = true;
-		curMenu = shopMenu;
-	}
+		enableMoveMode(true);
+
+	else if((curPlayer->getNumOfUnits() < curPlayer->getMaxUnits()) && (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory) && (!layout[cursorLoc.x][cursorLoc.y]->getHasUnit()) && (layout[cursorLoc.x][cursorLoc.y]->getOwnedBy() == curPlayer->getPlayerNo()))
+		enableMenu(shopMenu);
+
 	else
-	{
-		inMenu = true;
-		curMenu = turnMenu;
-	}
+		enableMenu(turnMenu);
 }
 
 void Stage::checkBack()
 {
-	if(moveMode)
+	if(inMenu)
 	{
-		if(inMenu)
+		if (curMenu->getType() == Tags::UnitMenu)
 		{
 			focusedUnit->setPositionAndLoc(prevUnitLoc, layout[prevUnitLoc.x][prevUnitLoc.y]->getPosition());
-			inMenu = false;
+			enableMoveMode(false);
 		}
-		else if (fireMode)
-		{
-			fireMode = false;
-			inMenu = true;
-		}
-		else
-		{
-			moveMode = false;
-			resetStageColor();
-		}
+		
+		inMenu = false;
 	}
-	else
-		if(inMenu)
-			inMenu = false;
-
+	else if(moveMode)
+	{
+		moveMode = false;
+		resetStageColor();
+	}
+	else if (fireMode)
+	{
+		enableMenu(unitMenu);
+	}
 }
 
 sf::Vector2i Stage::moveUnit()
@@ -323,8 +306,9 @@ sf::Vector2i Stage::moveUnit()
 	layout[start.x][start.y]->setUnitOn(NULL);
 	layout[cursorLoc.x][cursorLoc.y]->setUnitOn(focusedUnit);
 
-	inMenu = true;
-	curMenu = unitMenu;
+	moveMode = false;
+	enableMenu(unitMenu);
+	resetStageColor();
 	return start;
 }
 
@@ -370,4 +354,49 @@ void Stage::resetStageColor()
 				layout[i][j]->setCanUse(false);
 				layout[i][j]->setColor(sf::Color::White);
 			}
+}
+
+void Stage::enableMoveMode(bool focusOnUnit)
+{
+	if(focusOnUnit)
+		focusedUnit = layout[cursorLoc.x][cursorLoc.y]->getUnitOn();
+
+	moveMode = true;
+	seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange(), sf::Color(100, 149,237));
+}
+
+void Stage::enableFireMode()
+{
+	resetStageColor();
+	fireMode = true;
+	moveMode = false;
+	inMenu = false;
+	seeRange(focusedUnit->getLocation(), focusedUnit->getFireRange(), sf::Color(255,0,0));
+}
+
+void Stage::enableMenu(Menu* newMenu)
+{
+	inMenu = true;
+	curMenu = newMenu;
+}
+
+void Stage::unitWait()
+{
+	focusedUnit->setColor(sf::Color(84,84,84));
+	focusedUnit->setCanMove(false);
+	focusedUnit = NULL;
+	moveMode = false;
+	inMenu = false;
+	resetStageColor();
+}
+
+void Stage::unitBattle(Unit* enemy)
+{
+	if((enemy->getHealth() - focusedUnit->getAttackPower()) <= 0)
+	{
+		layout[enemy->getLocation().x][enemy->getLocation().y]->setUnitOn(NULL);
+		players[enemy->getOwnedBy()-1]->removeUnit(enemy->getIndexNo());
+	}
+	else
+		enemy->setHealth(enemy->getHealth() - focusedUnit->getAttackPower());
 }
