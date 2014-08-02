@@ -1,6 +1,6 @@
 #include "Stage.hpp"
 
-Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), moveMode(false), confirmDown(false), heldConfirm(false), inMenu(false), backDown(false), heldBack(false), fireMode(false), numOfPlayers(2)
+Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(false), heldLeft(false), moveUp(false), heldUp(false), moveDown(false), heldDown(false), moveMode(false), confirmDown(false), heldConfirm(false), inMenu(false), backDown(false), heldBack(false), fireMode(false), numOfPlayers(2), winner(0)
 {
 	width = dem1;
 	height = dem2;
@@ -11,6 +11,10 @@ Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(
 
 void Stage::update(sf::Time deltaTime)
 {
+	if ((layout[players[0]->getHQLocation().x][players[0]->getHQLocation().y]->getOwnedBy() != players[0]->getPlayerNo()) || (layout[players[1]->getHQLocation().x][players[1]->getHQLocation().y]->getOwnedBy() != players[1]->getPlayerNo()))
+		winner = curPlayer->getPlayerNo();
+
+
 	if(!heldRight && moveRight)
 	{
 		heldRight = true;
@@ -113,27 +117,24 @@ void Stage::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 
 void Stage::draw(sf::RenderWindow* window)
 {
+	if(winner == 0)
+	{
 	for (int i = 0; i < width; i++)
 		for(int j = 0; j < height; j++)
 			layout[i][j]->draw(window);
 
-	window->draw(p1Hud);
 	players[0]->drawUnits(window);
 	players[1]->drawUnits(window);
 	window->draw(cursor);
-	players[0]->drawHUD(window);
-	players[1]->drawHUD(window);
+	curPlayer->drawHUD(window);
 
 	if(inMenu)
 		curMenu->draw(window);
+	}
 }
 
 void Stage::load()
 {
-	textures.load(Textures::P1HUD, "Assets/Misc/P1HUD.png");
-	p1Hud.setTexture(textures.get(Textures::P1HUD));
-	p1Hud.setPosition(0.f, 30.f);
-
 	textures.load(Textures::Cursor, "Assets/Misc/Cursor.png");
 	cursor.setTexture(textures.get(Textures::Cursor));
 	cursor.setOrigin(16.f, 16.f);
@@ -162,13 +163,20 @@ void Stage::readStage()
 
 
 		for (int j = 0; j < height; j++)
-			if((i == 4) && (j == 3))
+			if ((i == 4) && (j == 3))
 				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if ((i == 4) && (j == 5))
+				layout[i][j] = new Tile(Tags::HQ, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
 			else if ((i == 7) && (j == 2))
 				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if ((i == 7) && (j == 5))
+				layout[i][j] = new Tile(Tags::HQ, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
 			else
 				layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16), 0);
 	}
+
+	players[0]->setHQLocation(sf::Vector2i(4, 5));
+	players[1]->setHQLocation(sf::Vector2i(7, 5));
 
 	cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
 }
@@ -183,7 +191,7 @@ void Stage::checkConfirm()
 
 	else if(fireMode)
 	{
-		if(layout[cursorLoc.x][cursorLoc.y]->getCanUse() && layout[cursorLoc.x][cursorLoc.y]->getHasUnit())
+		if(layout[cursorLoc.x][cursorLoc.y]->getCanUse() && layout[cursorLoc.x][cursorLoc.y]->getHasUnit() && (layout[cursorLoc.x][cursorLoc.y]->getUnitOn()->getOwnedBy() != focusedUnit->getOwnedBy()))
 		{
 			unitBattle(layout[cursorLoc.x][cursorLoc.y]->getUnitOn());
 			unitWait();
@@ -199,7 +207,7 @@ void Stage::checkConfirm()
 			enableFireMode();
 			break;
 		case 1:
-			if (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory)
+			if ((layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory) || (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::HQ))
 			{
 				layout[cursorLoc.x][cursorLoc.y]->changeOwner(focusedUnit->getOwnedBy());
 				unitWait();
@@ -396,7 +404,12 @@ void Stage::unitBattle(Unit* enemy)
 	{
 		layout[enemy->getLocation().x][enemy->getLocation().y]->setUnitOn(NULL);
 		players[enemy->getOwnedBy()-1]->removeUnit(enemy->getIndexNo());
+
+		if((focusedUnit->getExp() + 10) >= 10)
+			curPlayer->upgradeUnit(focusedUnit->getIndexNo());
+		else
+			focusedUnit->addExp(1);
 	}
 	else
-		enemy->setHealth(enemy->getHealth() - focusedUnit->getAttackPower());
+		enemy->minusHealth(focusedUnit->getAttackPower());
 }

@@ -55,13 +55,15 @@ private:
 	int				height;
 	Tile***			layout;
 	TextureHolder	textures;
-	sf::Sprite		p1Hud;
+
 	sf::Vector2i	cursorLoc;
 	sf::Vector2i	prevUnitLoc;
 	sf::Sprite		cursor;
+
 	CO**			players;
 	CO*				curPlayer;
 	int				numOfPlayers;
+	int				winner;	
 
 	Menu*			curMenu;
 	Menu*			unitMenu;

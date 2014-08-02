@@ -1,6 +1,6 @@
 #include "Unit.hpp"
 
-Unit::Unit(std::string nam, int range, int fRange, int dmg, bool canDo, int playerNo, int iNo) : health(1)
+Unit::Unit(std::string nam, int range, int fRange, int dmg, bool canDo, int playerNo, int iNo) : health(1), exp(0)
 {
 	name = nam;
 	moveRange = range;
@@ -21,24 +21,6 @@ Unit::Unit(std::string nam, int range, int fRange, int dmg, bool canDo, int play
 void Unit::draw(sf::RenderWindow* window)
 { window->draw(sprite); }
 
-void Unit::setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos)
-{
-	location = loc;
-	sprite.setPosition(pos);
-}
-
-sf::Vector2i Unit::getLocation()
-{ return location; }
-
-void Unit::setColor(sf::Color color)
-{ sprite.setColor(color); }
-
-void Unit::setCanMove(bool val)
-{ canMove = val; }
-
-void Unit::setHealth(int val)
-{ health = val; }
-
 void Unit::load()
 {
 	int numOfTex = 2;
@@ -57,27 +39,6 @@ void Unit::load()
 	sprite.setOrigin(8.f, 8.f);
 	sprite.setScale(2.f, 2.f);
 }
-
-bool Unit::getCanMove()
-{ return canMove; }
-
-int Unit::getMoveRange()
-{ return moveRange; }
-
-int Unit::getFireRange()
-{ return fireRange; }
-
-int Unit::getOwnedBy()
-{ return ownedBy; }
-
-int Unit::getHealth()
-{ return health; }
-
-int Unit::getAttackPower()
-{ return attackPower; }
-
-int Unit::getIndexNo()
-{ return indexNo; }
 
 void Unit::MoveTo(sf::Vector2i loc, std::queue<char>* q)
 {
@@ -109,6 +70,58 @@ void Unit::newTurn()
 
 	sprite.setColor(sf::Color::White);
 }
+
+bool Unit::getCanMove()
+{ return canMove; }
+
+void Unit::setCanMove(bool val)
+{ canMove = val; }
+
+int Unit::getMoveRange()
+{ return moveRange; }
+
+int Unit::getFireRange()
+{ return fireRange; }
+
+int Unit::getOwnedBy()
+{ return ownedBy; }
+
+int Unit::getHealth()
+{ return health; }
+
+void Unit::minusHealth(int val)
+{ health -= val; }
+
+int Unit::getExp()
+{ return exp; }
+
+void Unit::addExp(int val)
+{ exp += val; }
+
+int Unit::getAttackPower()
+{ return attackPower; }
+
+int Unit::getIndexNo()
+{ return indexNo; }
+
+sf::Vector2i Unit::getLocation()
+{ return location; }
+
+sf::Vector2f Unit::getPosition()
+{ return sprite.getPosition(); }
+
+void Unit::setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos)
+{
+	location = loc;
+	sprite.setPosition(pos);
+}
+
+std::string Unit::getType()
+{ return name; }
+
+void Unit::setColor(sf::Color color)
+{ sprite.setColor(color); }
+
 
 std::string Unit::convertIntToString(int i)
 {

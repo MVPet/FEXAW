@@ -61,10 +61,7 @@ void Tile::load()
 {
 	int numOfTex;
 
-	if(name == Tags::Factory)
-		numOfTex = 3;
-	else
-		numOfTex = 1;
+	((name == Tags::Factory) || (name == Tags::HQ)) ? numOfTex = 3 : numOfTex = 1;
 
 	texture = new sf::Texture[numOfTex];
 
@@ -80,7 +77,7 @@ void Tile::load()
 	}
 
 	sprite.setTexture(texture[ownedBy]);
-	sprite.setOrigin(texture[ownedBy].getSize().x / 2, texture[ownedBy].getSize().x / 2);
+	sprite.setOrigin(8.f , texture[ownedBy].getSize().y - 8.f);//texture[ownedBy].getSize().y / 2);
 	sprite.setPosition(x, y);
 	sprite.setScale(2.f, 2.f);
 }

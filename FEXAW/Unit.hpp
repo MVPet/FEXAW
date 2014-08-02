@@ -15,21 +15,26 @@ public:
 
 	void			draw(sf::RenderWindow* window);
 	void			setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos);
+
 	sf::Vector2i	getLocation();
+	sf::Vector2f	getPosition();
 	bool			getCanMove();
 	int				getMoveRange();
 	int				getFireRange();
 	int				getOwnedBy();
 	int				getHealth();
+	int				getExp();
 	int				getAttackPower();
 	int				getIndexNo();
+	std::string		getType();
 
 	void			MoveTo(sf::Vector2i loc, std::queue<char>* q);
 	void			newTurn();
 
 	void			setColor(sf::Color color);
 	void			setCanMove(bool val);
-	void			setHealth(int val);
+	void			minusHealth(int val);
+	void			addExp(int val);
 
 protected:
 
@@ -39,6 +44,7 @@ private:
 
 	std::string	name;
 	int			health;
+	int			exp;
 	bool		canMove;
 	bool		canFire;
 	int			moveRange;
