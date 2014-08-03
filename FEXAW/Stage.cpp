@@ -19,11 +19,19 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldRight = true;
 
-		if(!inMenu)
+		if(!inMenu && (cursorLoc.x != (width-1)))
 		{
-			if (cursorLoc.x != (width-1))
+			if (moveMode && (!layout[cursorLoc.x+1][cursorLoc.y]->getIsHazard()) && (layout[cursorLoc.x+1][cursorLoc.y]->getCanUse()))
+			{
 				cursorLoc.x += 1;
-			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				focusedUnit->setPosition(cursor.getPosition());
+			}
+			else if (!moveMode)
+			{
+				cursorLoc.x += 1;
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+			}
 		}
 	}
 	else 
@@ -33,11 +41,19 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldLeft = true;
 
-		if(!inMenu)
+		if(!inMenu && (cursorLoc.x != 0))
 		{
-			if (cursorLoc.x != 0)
+			if (moveMode && (!layout[cursorLoc.x-1][cursorLoc.y]->getIsHazard()) && (layout[cursorLoc.x-1][cursorLoc.y]->getCanUse()))
+			{
 				cursorLoc.x -= 1;
-			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				focusedUnit->setPosition(cursor.getPosition());
+			}
+			else if (!moveMode)
+			{
+				cursorLoc.x -= 1;
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+			}
 		}
 	}
 	else 
@@ -47,11 +63,19 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldUp = true;
 
-		if(!inMenu)
+		if(!inMenu && (cursorLoc.y != 0))
 		{
-			if (cursorLoc.y != 0)
+			if (moveMode && (!layout[cursorLoc.x][cursorLoc.y-1]->getIsHazard()) && (layout[cursorLoc.x][cursorLoc.y-1]->getCanUse()))
+			{
 				cursorLoc.y -= 1;
-			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				focusedUnit->setPosition(cursor.getPosition());
+			}
+			else if (!moveMode)
+			{
+				cursorLoc.y -= 1;
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+			}
 		}
 		else
 		{
@@ -65,11 +89,19 @@ void Stage::update(sf::Time deltaTime)
 	{
 		heldDown = true;
 
-		if(!inMenu)
+		if(!inMenu && (cursorLoc.y != (height-1)))
 		{
-			if (cursorLoc.y != (height-1))
+			if (moveMode && (!layout[cursorLoc.x][cursorLoc.y+1]->getIsHazard()) && (layout[cursorLoc.x][cursorLoc.y+1]->getCanUse()))
+			{
 				cursorLoc.y += 1;
-			cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				focusedUnit->setPosition(cursor.getPosition());
+			}
+			else if (!moveMode)
+			{
+				cursorLoc.y += 1;
+				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+			}
 		}
 		else
 		{
@@ -186,7 +218,16 @@ void Stage::checkConfirm()
 	if(moveMode)
 	{
 		if(layout[cursorLoc.x][cursorLoc.y]->getCanUse())
-			prevUnitLoc = moveUnit();
+		{
+			layout[focusedUnit->getLocation().x][focusedUnit->getLocation().y]->setUnitOn(NULL);
+			layout[cursorLoc.x][cursorLoc.y]->setUnitOn(focusedUnit);
+			focusedUnit->setLocation(cursorLoc);
+
+			moveMode = false;
+			enableMenu(unitMenu);
+			resetStageColor();
+			//prevUnitLoc = moveUnit();
+		}
 	}
 
 	else if(fireMode)
@@ -270,6 +311,7 @@ void Stage::checkBack()
 	}
 	else if(moveMode)
 	{
+		focusedUnit->setPosition(prevUnitPos);
 		moveMode = false;
 		resetStageColor();
 	}
@@ -367,7 +409,10 @@ void Stage::resetStageColor()
 void Stage::enableMoveMode(bool focusOnUnit)
 {
 	if(focusOnUnit)
+	{
 		focusedUnit = layout[cursorLoc.x][cursorLoc.y]->getUnitOn();
+		prevUnitPos = focusedUnit->getPosition();
+	}
 
 	moveMode = true;
 	seeRange(focusedUnit->getLocation(), focusedUnit->getMoveRange(), sf::Color(100, 149,237));

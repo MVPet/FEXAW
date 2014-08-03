@@ -84,7 +84,7 @@ void CO::upgradeUnit(int indexNo)
 		sf::Vector2f pos = unitList[indexNo]->getPosition();
 
 		delete unitList[indexNo];
-		unitList[indexNo] = new Unit(Tags::Mech, 5, 1, 2, false, playerNo, indexNo);
+		unitList[indexNo] = new Unit(Tags::Mech, 3, 1, 2, false, playerNo, indexNo);
 		unitList[indexNo]->setPositionAndLoc(loc, pos);
 	}
 }

@@ -58,6 +58,7 @@ private:
 
 	sf::Vector2i	cursorLoc;
 	sf::Vector2i	prevUnitLoc;
+	sf::Vector2f	prevUnitPos;
 	sf::Sprite		cursor;
 
 	CO**			players;

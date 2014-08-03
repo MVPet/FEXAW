@@ -14,6 +14,8 @@ public:
 	Unit(std::string nam, int range, int fRange, int dmg, bool canDo, int playerNo, int iNo);
 
 	void			draw(sf::RenderWindow* window);
+	void			setPosition(sf::Vector2f pos);
+	void			setLocation(sf::Vector2i loc);
 	void			setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos);
 
 	sf::Vector2i	getLocation();

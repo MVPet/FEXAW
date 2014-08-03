@@ -110,6 +110,12 @@ sf::Vector2i Unit::getLocation()
 sf::Vector2f Unit::getPosition()
 { return sprite.getPosition(); }
 
+void Unit::setPosition(sf::Vector2f pos)
+{ sprite.setPosition(pos); }
+
+void Unit::setLocation(sf::Vector2i loc)
+{ location = loc; }
+
 void Unit::setPositionAndLoc(sf::Vector2i loc, sf::Vector2f pos)
 {
 	location = loc;
