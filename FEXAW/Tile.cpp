@@ -36,8 +36,16 @@ bool Tile::getCanUse()
 Unit* Tile::getUnitOn()
 { return unitOn; }
 
-bool Tile::getIsHazard()
-{ return isHazard; }
+bool Tile::getIsHazard(std::string unit)
+{
+	if((unit == Tags::Infantry) || (unit == Tags::Mech))
+	{
+		if(name == Tags::Ocean)
+			return true;
+		else
+			return false;
+	}
+}
 
 std::string Tile::getType()
 { return name; }
@@ -61,7 +69,7 @@ void Tile::load()
 {
 	int numOfTex;
 
-	((name == Tags::Factory) || (name == Tags::HQ)) ? numOfTex = 3 : numOfTex = 1;
+	((name == Tags::Factory) || (name == Tags::HQ) || (name == Tags::City)) ? numOfTex = 3 : numOfTex = 1;
 
 	texture = new sf::Texture[numOfTex];
 

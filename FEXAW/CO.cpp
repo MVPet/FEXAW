@@ -13,6 +13,12 @@ CO::CO(std::string nam, Faction::ID side, int unitNum, int pNo)
 	load();
 }
 
+void CO::update(sf::Vector2f vec)
+{
+	background.setPosition(vec.x, vec.y + 30.f);
+	face.setPosition(background.getPosition());
+}
+
 void CO::drawHUD(sf::RenderWindow* window)
 { 
 	window->draw(background);
@@ -42,7 +48,7 @@ void CO::load()
 		throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
 
 	face.setTexture(faceTex);
-	face.setPosition(0.f, 30.f);
+	face.setPosition(background.getPosition());
 
 	filename = "Assets/Char/" + name + "Mug.png";
 

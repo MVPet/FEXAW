@@ -5,6 +5,9 @@ Stage::Stage(int dem1, int dem2) : moveRight(false), heldRight(false), moveLeft(
 	width = dem1;
 	height = dem2;
 
+	view.setCenter(sf::Vector2f(240,160));
+	view.setSize(sf::Vector2f(480,320));
+
 	load();
 	readStage();
 }
@@ -21,16 +24,21 @@ void Stage::update(sf::Time deltaTime)
 
 		if(!inMenu && (cursorLoc.x != (width-1)))
 		{
-			if (moveMode && (!layout[cursorLoc.x+1][cursorLoc.y]->getIsHazard()) && (layout[cursorLoc.x+1][cursorLoc.y]->getCanUse()))
+			if (moveMode && (!layout[cursorLoc.x+1][cursorLoc.y]->getIsHazard(focusedUnit->getType())) && (layout[cursorLoc.x+1][cursorLoc.y]->getCanUse()))
 			{
 				cursorLoc.x += 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
 				focusedUnit->setPosition(cursor.getPosition());
+
+				if((cursor.getPosition().x > (view.getCenter().x + (view.getSize().x / 2) - 32)) && (cursorLoc.x <= width-2))
+					view.move(32,0);
 			}
 			else if (!moveMode)
 			{
 				cursorLoc.x += 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				if((cursor.getPosition().x > (view.getCenter().x + (view.getSize().x / 2) - 32)) && (cursorLoc.x <= width-2))
+					view.move(32,0);
 			}
 		}
 	}
@@ -43,16 +51,20 @@ void Stage::update(sf::Time deltaTime)
 
 		if(!inMenu && (cursorLoc.x != 0))
 		{
-			if (moveMode && (!layout[cursorLoc.x-1][cursorLoc.y]->getIsHazard()) && (layout[cursorLoc.x-1][cursorLoc.y]->getCanUse()))
+			if (moveMode && (!layout[cursorLoc.x-1][cursorLoc.y]->getIsHazard(focusedUnit->getType())) && (layout[cursorLoc.x-1][cursorLoc.y]->getCanUse()))
 			{
 				cursorLoc.x -= 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
 				focusedUnit->setPosition(cursor.getPosition());
+				if((cursor.getPosition().x < (view.getCenter().x - (view.getSize().x / 2) + 32)) && (cursorLoc.x >= 1))
+					view.move(-32,0);
 			}
 			else if (!moveMode)
 			{
 				cursorLoc.x -= 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				if((cursor.getPosition().x < (view.getCenter().x - (view.getSize().x / 2) + 32) && (cursorLoc.x >= 1)))
+					view.move(-32,0);
 			}
 		}
 	}
@@ -65,16 +77,20 @@ void Stage::update(sf::Time deltaTime)
 
 		if(!inMenu && (cursorLoc.y != 0))
 		{
-			if (moveMode && (!layout[cursorLoc.x][cursorLoc.y-1]->getIsHazard()) && (layout[cursorLoc.x][cursorLoc.y-1]->getCanUse()))
+			if (moveMode && (!layout[cursorLoc.x][cursorLoc.y-1]->getIsHazard(focusedUnit->getType())) && (layout[cursorLoc.x][cursorLoc.y-1]->getCanUse()))
 			{
 				cursorLoc.y -= 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
 				focusedUnit->setPosition(cursor.getPosition());
+				if((cursor.getPosition().y < (view.getCenter().y - (view.getSize().y / 2) + 32)) && (cursorLoc.y >= 1))
+					view.move(0,-32);
 			}
 			else if (!moveMode)
 			{
 				cursorLoc.y -= 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				if((cursor.getPosition().y < (view.getCenter().y - (view.getSize().y / 2) + 32)) && (cursorLoc.y >= 1))
+					view.move(0,-32);
 			}
 		}
 		else
@@ -91,16 +107,20 @@ void Stage::update(sf::Time deltaTime)
 
 		if(!inMenu && (cursorLoc.y != (height-1)))
 		{
-			if (moveMode && (!layout[cursorLoc.x][cursorLoc.y+1]->getIsHazard()) && (layout[cursorLoc.x][cursorLoc.y+1]->getCanUse()))
+			if (moveMode && (!layout[cursorLoc.x][cursorLoc.y+1]->getIsHazard(focusedUnit->getType())) && (layout[cursorLoc.x][cursorLoc.y+1]->getCanUse()))
 			{
 				cursorLoc.y += 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
 				focusedUnit->setPosition(cursor.getPosition());
+				if((cursor.getPosition().y > (view.getCenter().y + (view.getSize().y / 2) - 32)) && (cursorLoc.y <= height-2))
+					view.move(0,32);
 			}
 			else if (!moveMode)
 			{
 				cursorLoc.y += 1;
 				cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
+				if((cursor.getPosition().y > (view.getCenter().y + (view.getSize().y / 2) - 32)) && (cursorLoc.y <= height-2))
+					view.move(0,32);
 			}
 		}
 		else
@@ -126,6 +146,8 @@ void Stage::update(sf::Time deltaTime)
 	}
 	else
 		heldBack = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+
+	curPlayer->update(sf::Vector2f(view.getCenter().x - (view.getSize().x / 2), view.getCenter().y - (view.getSize().y / 2)));
 }
 
 void Stage::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
@@ -149,6 +171,8 @@ void Stage::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 
 void Stage::draw(sf::RenderWindow* window)
 {
+	window->setView(view);
+
 	if(winner == 0)
 	{
 	for (int i = 0; i < width; i++)
@@ -187,7 +211,8 @@ void Stage::load()
 // temporary test stage, this function will not stay the same
 void Stage::readStage()
 {
-	layout = new Tile**[width];
+	beanIsland();
+	/*layout = new Tile**[width];
 
 	for (int i = 0; i < width; i++)
 	{
@@ -195,7 +220,7 @@ void Stage::readStage()
 
 
 		for (int j = 0; j < height; j++)
-			if ((i == 4) && (j == 3))
+			/*if ((i == 4) && (j == 3))
 				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
 			else if ((i == 4) && (j == 5))
 				layout[i][j] = new Tile(Tags::HQ, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
@@ -203,13 +228,18 @@ void Stage::readStage()
 				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
 			else if ((i == 7) && (j == 5))
 				layout[i][j] = new Tile(Tags::HQ, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if ((i == 5) || (i == 6))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if ((i == 3))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), 0);
 			else
-				layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16), 0);
-	}
+				//layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16), 0);
+	}*/
 
-	players[0]->setHQLocation(sf::Vector2i(4, 5));
-	players[1]->setHQLocation(sf::Vector2i(7, 5));
+	players[0]->setHQLocation(sf::Vector2i(1, 7));
+	players[1]->setHQLocation(sf::Vector2i(14, 7));
 
+	cursorLoc = players[0]->getHQLocation();
 	cursor.setPosition(layout[cursorLoc.x][cursorLoc.y]->getPosition());
 }
 
@@ -248,7 +278,7 @@ void Stage::checkConfirm()
 			enableFireMode();
 			break;
 		case 1:
-			if ((layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory) || (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::HQ))
+			if ((layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::Factory) || (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::HQ) || (layout[cursorLoc.x][cursorLoc.y]->getType() == Tags::City))
 			{
 				layout[cursorLoc.x][cursorLoc.y]->changeOwner(focusedUnit->getOwnedBy());
 				unitWait();
@@ -368,25 +398,25 @@ void Stage::seeRange(sf::Vector2i point, int movesLeft, sf::Color color)
 	{
 		movesLeft--;
 
-		if(!layout[point.x+1][point.y]->getIsHazard())
+		if(!layout[point.x+1][point.y]->getIsHazard(focusedUnit->getType()))
 		{
 			layout[point.x+1][point.y]->setColor(color);
 			layout[point.x+1][point.y]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x+1, point.y), movesLeft, color);
 		}
-		if(!layout[point.x-1][point.y]->getIsHazard())
+		if(!layout[point.x-1][point.y]->getIsHazard(focusedUnit->getType()))
 		{
 			layout[point.x-1][point.y]->setColor(color);
 			layout[point.x-1][point.y]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x-1, point.y), movesLeft, color);
 		}
-		if(!layout[point.x][point.y-1]->getIsHazard())
+		if(!layout[point.x][point.y-1]->getIsHazard(focusedUnit->getType()))
 		{
 			layout[point.x][point.y-1]->setColor(color);
 			layout[point.x][point.y-1]->setCanUse(true);
 			seeRange(sf::Vector2i(point.x, point.y-1), movesLeft, color);
 		}
-		if(!layout[point.x][point.y+1]->getIsHazard())
+		if(!layout[point.x][point.y+1]->getIsHazard(focusedUnit->getType()))
 		{
 			layout[point.x][point.y+1]->setColor(color);
 			layout[point.x][point.y+1]->setCanUse(true);
@@ -457,4 +487,94 @@ void Stage::unitBattle(Unit* enemy)
 	}
 	else
 		enemy->minusHealth(focusedUnit->getAttackPower());
+}
+
+void Stage::beanIsland()
+{
+	layout = new Tile**[width];
+
+	for (int i = 0; i < width; i++)
+	{
+		layout[i] = new Tile*[height];
+
+		for (int j = 0; j < height; j++)
+			if ((i == 0) || (j == 0) || (i == 15))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 1) && ((i <= 4) || (i == 7) || (i == 8) || (i == 9) || (i == 12)|| (i == 13) || (i == 14))))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 1) && ((i == 11))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 2) && ((i == 1) || (i == 14))))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 2) && ((i == 4) || (i == 11) || (i == 12))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 2) && ((i >= 5) && (i <= 10))))
+				layout[i][j] = new Tile(Tags::Woods, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 3) && ((i == 3) || (i == 4) || (i == 11) || (i == 12))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 4) && ((i == 3) || (i == 4) || (i == 11) || (i == 12))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 4) && ((i == 1) || (i == 2))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 4) && ((i == 13) || (i == 14))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 4) && ((i >= 5) && (i <= 10))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 5) && ((i == 4) || (i == 11))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 6) && ((i == 1) || (i == 3))))
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 6) && ((i == 12) || (i == 14))))
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 6) && ((i == 4) || (i == 11) || (i == 7) || (i == 8))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 7) && ((i == 1))))
+				layout[i][j] = new Tile(Tags::HQ, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 7) && ((i == 14))))
+				layout[i][j] = new Tile(Tags::HQ, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 7) && ((i == 2))))
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 7) && ((i == 13))))
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 7) && ((i == 6))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 7) && ((i == 9))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 7) && ((i == 4) || (i == 7) || (i == 8) || (i == 11))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 8) && ((i == 1))))
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 8) && ((i == 14))))
+				layout[i][j] = new Tile(Tags::Factory, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 8) && ((i == 2) || (i == 13))))
+				layout[i][j] = new Tile(Tags::Woods, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 8) && ((i == 4) || (i == 7) || (i == 8) || (i == 11))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 9) && ((i == 6))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 9) && ((i == 9))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 9) && ((i == 7) || (i == 8))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 10) && ((i == 1)|| (i == 2))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[0]->getPlayerNo());
+			else if(((j == 10) && ((i == 13) || (i == 14))))
+				layout[i][j] = new Tile(Tags::City, (float)(i * 16), (float)(j * 16), players[1]->getPlayerNo());
+			else if(((j == 10) && ((i == 4) || (i == 5) || (i == 10) || (i == 11) || (i == 12))))
+				layout[i][j] = new Tile(Tags::Woods, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 10) && ((i >= 6) && (i <= 11))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 11) && ((i == 1) || (i == 2) || (i == 8) || (i == 14))))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 11) && ((i == 12))))
+				layout[i][j] = new Tile(Tags::Mountain, (float)(i * 16), (float)(j * 16), 0);
+			else if(((j == 12) && (((i >= 1) && (i <= 3)) || ((i >= 6) && (i <= 10)) || ((i >= 12) && (i <= 14)))))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if ((j == 13))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else if ((j == 14))
+				layout[i][j] = new Tile(Tags::Ocean, (float)(i * 16), (float)(j * 16), 0);
+			else
+				layout[i][j] = new Tile(Tags::Land, (float)(i * 16), (float)(j * 16), 0);
+	}
 }

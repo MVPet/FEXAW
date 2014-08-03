@@ -1,4 +1,4 @@
-﻿Build started 8/2/2014 9:03:45 PM.
+﻿Build started 8/3/2014 6:47:52 PM.
      1>Project "C:\Users\Wk\Documents\GitHub\FEXAW\FEXAW\FEXAW.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\SFML-2.1\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D SFML_STATIC /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Stage.cpp
@@ -14,10 +14,11 @@
          Release\Tile.obj
          Release\Unit.obj
          Generating code
+     1>c:\users\wk\documents\github\fexaw\fexaw\tile.cpp(48): warning C4715: 'Tile::getIsHazard' : not all control paths return a value
          Finished generating code
          FEXAW.vcxproj -> C:\Users\Wk\Documents\GitHub\FEXAW\Release\FEXAW.exe
      1>Done Building Project "C:\Users\Wk\Documents\GitHub\FEXAW\FEXAW\FEXAW.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.87
+Time Elapsed 00:00:04.07

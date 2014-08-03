@@ -18,6 +18,8 @@ public:
 protected:
 
 private:
+	void			beanIsland();
+
 	void			readStage();
 	void			load();
 	void			checkConfirm();
@@ -55,6 +57,8 @@ private:
 	int				height;
 	Tile***			layout;
 	TextureHolder	textures;
+
+	sf::View		view;
 
 	sf::Vector2i	cursorLoc;
 	sf::Vector2i	prevUnitLoc;

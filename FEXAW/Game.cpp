@@ -5,7 +5,7 @@
 // default constructor
 Game::Game() : mWindow(sf::VideoMode(480,320), "FEXAW"), timePerFrame(sf::seconds(1.f / 60.f))
 {
-	test = new Stage(15, 10);
+	test = new Stage(16, 15);
 }
 
 // our "infinte" loop that starts the game clock and loops while the window is open

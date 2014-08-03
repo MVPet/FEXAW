@@ -17,7 +17,7 @@ public:
 	sf::Vector2f	getPosition();
 	bool			getHasUnit();
 	bool			getCanUse();
-	bool			getIsHazard();
+	bool			getIsHazard(std::string unit);
 	Unit*			getUnitOn();
 	std::string		getType();
 	int				getOwnedBy();

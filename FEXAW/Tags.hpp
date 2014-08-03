@@ -8,6 +8,9 @@ class Tags
 public:
 	static const std::string Land;
 	static const std::string Ocean;
+	static const std::string Woods;
+	static const std::string Mountain;
+	static const std::string City;
 	static const std::string Factory;
 	static const std::string HQ;
 

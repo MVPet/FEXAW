@@ -2,7 +2,10 @@
 
 const std::string Tags::Land = "Land";
 const std::string Tags::Ocean = "Ocean";
+const std::string Tags::City = "City";
+const std::string Tags::Woods = "Woods";
 const std::string Tags::Factory = "Factory";
+const std::string Tags::Mountain = "Mount";
 const std::string Tags::HQ = "HQ";
 
 const std::string Tags::Andy = "Andy";
