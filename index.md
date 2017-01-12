@@ -1,14 +1,17 @@
-This is a personal project I made to test out and become accustomed to the SFML API.
+<p>This is a prototype I made to practive developing a game in the style of a turn-based strategy game.</p>
 
-It is in an alpha state and was meant to be a learning tool than a large full fledged game.
+<p>The current state of the game has a 2-player 1v1 mode where the goal is to capture the enemy's HQ. Each side has only one available unit which is the Infantry which can only be spanwed from Factory tiles. Along the way to the enemy's base, they can capture cities and factories to allow them to produce more units closer to the front lines. If Infantry are successful in battle, then they will gain experience and be upgraded to the Mech unit, who is capable of dealing more damage.</p>
 
-The current state of the game has a 2-player 1v1 mode where the goal is to capture the enemy's HQ. Each side has only one available unit which is the Infantry and along the way to the enemy's base, they can capture cities and factories to allow them to produce more units closer to the front lines. If Infantry are successful in battle, then they will gain experience and soon be upgraded to the Mech unit, who is capable of dealing more damage.
+<p>This is a prototype fan game. All content used (Music, Graphics, Fonts) is owned by Nintendo. Advance Wars is owned by Nintendo.</p>
 
-[Back to Main Page](http://mvpet.github.io/)
+<h3><p align="center">Video:</p></h3>
+ <iframe width="420" height="315" src="https://www.youtube.com/embed/BAsrW2xo1lI" frameborder="0" allowfullscreen></iframe>
 
-### Updates:
-```
- August 3, 2014
+<p><a href="http://mvpet.github.io/">Back to Main Page</a></p>
+
+<h3><p align="center">Updates:</p></h3>
+
+<pre><code> August 3, 2014
 - Implemented camera using sf::View
 - Added new tiles: Ocean, Mountain, Woods, and City
 - Added a new map, Bean Island from AW2
@@ -82,4 +85,4 @@ Also:
 - Added in game loop and TextureHolder class
 - Obtained graphics to be used, but have not yet included them into project
 - P.S. It is really difficult to program while having EVO on max volume
-```
+</code></pre>
