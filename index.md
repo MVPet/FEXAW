@@ -9,7 +9,7 @@
 
 <p><a href="http://mvpet.github.io/">Back to Main Page</a></p>
 
-<h3><p align="center">Updates:</p></h3>
+<h3><p align="center">Update Log</p></h3>
 
 <pre><code> August 3, 2014
 - Implemented camera using sf::View
