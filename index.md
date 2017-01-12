@@ -5,7 +5,7 @@
 <p>This is a prototype fan game. All content used (Music, Graphics, Fonts) is owned by Nintendo. Advance Wars is owned by Nintendo.</p>
 
 <h3><p align="center">Video:</p></h3>
- <iframe width="420" height="315" src="https://www.youtube.com/embed/BAsrW2xo1lI" frameborder="0" allowfullscreen></iframe>
+ <iframe align = "center" width="420" height="315" src="https://www.youtube.com/embed/BAsrW2xo1lI" frameborder="0" allowfullscreen></iframe>
 
 <p><a href="http://mvpet.github.io/">Back to Main Page</a></p>
 
