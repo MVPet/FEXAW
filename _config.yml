@@ -1,0 +1,8 @@
+title: Advance Wars EX
+description: An alternate take on the Advance Wars formula.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-midnight
+
+gems:
+  - jekyll-mentions
