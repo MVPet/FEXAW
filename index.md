@@ -1,6 +1,8 @@
-<p>This is a prototype I made to practive developing a game in the style of a turn-based strategy game.</p>
+<p>This is a prototype I made to practive developing the framework and gameplay of Turn-Based Strategy Games like Nintendo's Advance Wars series.</p>
 
-<p>The current state of the game has a 2-player 1v1 mode where the goal is to capture the enemy's HQ. Each side has only one available unit which is the Infantry which can only be spanwed from Factory tiles. Along the way to the enemy's base, they can capture cities and factories to allow them to produce more units closer to the front lines. If Infantry are successful in battle, then they will gain experience and be upgraded to the Mech unit, who is capable of dealing more damage.</p>
+<h3><p align="center">The Prototype</p></h3>
+
+<p>The prototype has a 2-player 1v1 mode where the goal is to capture the enemy's HQ. Each side has only one available unit, The Infantry, which can only be spanwed from Factory tiles. Along the way to the enemy's base, they can capture cities and factories to allow them to produce more units closer to the front lines. If Infantry are successful in battle, then they will gain experience and be upgraded to the Mech unit, who is capable of dealing more damage.</p>
 
 <p>This is a prototype fan game. All content used (Music, Graphics, Fonts) is owned by Nintendo. Advance Wars is owned by Nintendo.</p>
 
@@ -10,81 +12,3 @@
 <br>
 <br>
 <p><a href="http://mvpet.github.io/">Back to Main Page</a></p>
-
-<h3><p align="center">Update Log</p></h3>
-
-<pre><code> August 3, 2014
-- Implemented camera using sf::View
-- Added new tiles: Ocean, Mountain, Woods, and City
-- Added a new map, Bean Island from AW2
-- Fixed a bug where player's HUD wouldn't scroll with the screen
-
- August 2, 2014
-- Implemented a new unit movement system similar to the one in Project X Zone.
-- Began coding in camera movement using sf::View
-
- August 1, 2014
-- Added in winning and losing, (don't let your HQ be captured)
-- Added in a new Tile: the HQ
-- Added in a unit exp system and unit upgrades
-- Fixed bug where friendly units can attack each other
-- Fixed wrong sprite origin when sprite is greater than 16x16
-- Fixed player 2's HUD not displaying
-
-Also:
-- Watching ESA taught me a bit about game development
-
- July 30, 2014
-- Added some new functions to optimize code when pressing confirm.
-- Fixed game crash when destroying an enemy unit
-- Fixed bug allowing more units to be made when at max units.
-- Fixed when range would be shown while "controlling" a unit
-- Other minor bug fixes
-
- July 29, 2014
-- Added in multiple player system and player turns
-- Added in unit buying and spawning at factories , menu included
-- Added in battles between two units
-- Cleaned up filenames + loose files
-
- July 24, 2014
-- Added in Unit Spawning, and the menu for doing so
-- Added in building capturing
-- Fixed bugs pertaining to selecting other player's units and buildings
-- Began adding in systems for multiple players
-
- July 23, 2014
-- Finished Menu system
-- "Fixed" Menu system texture loading bug
-- Added in Factory tile
-
- July 22, 2014
-- Optimized some code
-- Renamed some poorly named variables
-- halfway implemented a new Menu system
-- fixed issue with static playerNo
-
- July 20, 2014
-- Forgot to commit last night
-- added in Firing/Battle mode and Menu options
-- few bug fixes involving fire menu and selecting options within unit menu
-
- July 19, 2014
-- Finished movement by adding in visible move range, as well as a 
-  Unit menu for unit orders
-- Optimized some code, but not the pathfinding algorithm
-
- July 18, 2014
-- Multiple Day Sized Commit
-- Added in Stages, COs, and Units
-- Basic gameplay added, can move units around
-- Added in very basic pathfinding algorithm for unit movement.
-- Added Tags for easier string handling
-
- July 13, 2014
-- First Commit
-- Little bit of starting work done between EVO matches
-- Added in game loop and TextureHolder class
-- Obtained graphics to be used, but have not yet included them into project
-- P.S. It is really difficult to program while having EVO on max volume
-</code></pre>
