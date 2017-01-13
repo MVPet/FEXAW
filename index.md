@@ -11,4 +11,4 @@
 
 <br>
 <br>
-<p><a href="http://mvpet.github.io/">Back to Main Page</a></p>
+<p align="center"><a href="http://mvpet.github.io/">Back to Main Page</a></p>
