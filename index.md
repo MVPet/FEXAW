@@ -2,6 +2,7 @@
 <b><i>Developed With: C++ and SFML</i></b><br>
 <b><i>Development Time : June 2014 to August 2014</i></b><br>
 </h4>
+<br>
 <p>This is a prototype I made to practive developing the framework and gameplay of Turn-Based Strategy Games like Nintendo's Advance Wars series.</p>
 
 <h3><p align="center">The Prototype</p></h3>
