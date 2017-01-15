@@ -9,7 +9,9 @@
 
 <p>The prototype has a 2-player 1v1 mode where the goal is to capture the enemy's HQ. Each side has only one available unit, The Infantry, which can only be spanwed from Factory tiles. Along the way to the enemy's base, they can capture cities and factories to allow them to produce more units closer to the front lines. If Infantry are successful in battle, then they will gain experience and be upgraded to the Mech unit, who is capable of dealing more damage.</p>
 
-<p align="center"><i><b>This is a nonprofit prototype. All content used (Music, Graphics, Fonts) are owned by Nintendo. <br>Please support the official releases.</b></i></p>
+<p align="center"><i><b>This is a nonprofit prototype.<br>
+All content used (Music, Graphics, Fonts) are owned by Nintendo.<br>
+Please support the official releases.</b></i></p>
 
 <h3><p align="center">Video:</p></h3>
  <p align = "center"><iframe width="420" height="315" src="https://www.youtube.com/embed/BAsrW2xo1lI" frameborder="0" allowfullscreen></iframe></p>
