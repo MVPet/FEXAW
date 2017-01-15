@@ -14,6 +14,6 @@ All content used (Music, Graphics, Fonts) are owned by Nintendo.<br>
 Please support the official releases.</b></i></p>
 
 <h3><p align="center">Video:</p></h3>
- <p align = "center"><iframe width="420" height="315" src="https://www.youtube.com/embed/BAsrW2xo1lI" frameborder="0" allowfullscreen></iframe></p>
+ <p align = "center"><iframe width="560" height="315" src="https://www.youtube.com/embed/BAsrW2xo1lI" frameborder="0" allowfullscreen></iframe></p>
 <br>
 <p align="center"><a href="http://mvpet.github.io/">Back to Main Page</a></p>
